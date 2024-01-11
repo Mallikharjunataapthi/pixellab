@@ -14,7 +14,7 @@ export class FileUploadMiddleware {
 
   async s3_upload(ImageFile:any) {
 
-    return 'https://pixellabs3.s3.us-west-2.amazonaws.com/1704194791289_dummy.jpeg';
+    // return 'https://pixellabs3.s3.us-west-2.amazonaws.com/1704194791289_dummy.jpeg';
     const file = ImageFile.buffer;
     const bucket = process.env.AWS_S3_BUCKET;
     const filename = this.RenameFile(ImageFile.originalname);

@@ -101,6 +101,16 @@ export class TemplatesController {
     }
   }
 
+  @Public()
+  @Get('/properties/:id')
+ async getTemplateforApi(@Param('id') id:Types.ObjectId, @Res() response:Response){
+    try{
+      const data = await this.templatesService.findTmeplate(id);
+      return response.status(data.StatusCode).json(data);
+    }catch(error){
+      return error
+    }
+  }
   @Patch('/approvetemplate')
   async approveTemplates(@Body() template:any,@Res() response:Response){
     try {

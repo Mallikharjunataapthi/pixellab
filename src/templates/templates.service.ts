@@ -333,6 +333,7 @@ export class TemplatesService {
       const skip = (page - 1) * pageSize;
       // start of the current month
       const startOfMonth = new Date(); 
+      startOfMonth.setDate(1);
       startOfMonth.setHours(0, 0, 0, 0);
 
        // end of the current month
@@ -361,6 +362,11 @@ export class TemplatesService {
         {
           $limit: pageSize,
         },
+        {
+          $project: {
+            propertiesjson:0
+          }
+        }
       ]);
 
       return{
@@ -382,7 +388,7 @@ export class TemplatesService {
       const skip = (page - 1) * pageSize;
       const result = await this.TemplateModel.find({is_approved:'Approved',is_active:"1"})
       .sort({ used_count: -1 }).skip(skip)
-      .limit(pageSize);
+      .limit(pageSize).select({ propertiesjson: 0 });
       const totalTemplates = await this.TemplateModel.countDocuments();
       return {
         success:true,
@@ -401,7 +407,7 @@ export class TemplatesService {
       const skip = (page - 1) * pageSize;
       const result = await this.TemplateModel.find({is_approved:'Approved', is_active:"1"})
       .sort({ createdAt: -1 }).skip(skip)
-      .limit(pageSize);
+      .limit(pageSize).select({ propertiesjson: 0 });
       const totalTemplates = await this.TemplateModel.countDocuments();
       return {
         success:true,
@@ -441,5 +447,16 @@ export class TemplatesService {
       throw new InternalServerErrorException(error);
     }
     
+  }
+
+  async findTmeplate(id:Types.ObjectId){
+    const data =  await this.TemplateModel.findOne({_id:id}).select({ propertiesjson: 1,template_name:1 });
+    return {
+      success:true,
+      StatusCode:HttpStatus.OK,
+      list:{
+        data
+      }
+    }
   }
 }

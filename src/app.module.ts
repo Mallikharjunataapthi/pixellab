@@ -17,12 +17,13 @@ import { TagsModule } from './tags/tags.module';
 import { UserTemplatesModule } from './user-templates/user-templates.module';
 import { ReportTemplateModule } from './report-template/report-template.module';
 import { AdminReportModule } from './admin-report/admin-report.module';
+import { AppsModule } from './apps/apps.module';
 @Module({
   imports: [ConfigModule.forRoot({
     envFilePath: '.env',
     isGlobal: true,
   }),
-  UsersModule,MongooseModule.forRoot(process.env.DB_URI), AuthModule, CategoryModule, TemplatesModule, LikesModule, TagsModule, UserTemplatesModule, ReportTemplateModule, AdminReportModule],
+  UsersModule,MongooseModule.forRoot(process.env.DB_URI), AuthModule, CategoryModule, TemplatesModule, LikesModule, TagsModule, UserTemplatesModule, ReportTemplateModule, AdminReportModule, AppsModule],
   controllers: [AppController],
   providers: [{
     provide: APP_GUARD,

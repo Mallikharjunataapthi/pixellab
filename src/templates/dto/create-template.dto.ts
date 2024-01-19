@@ -18,7 +18,6 @@ export class CreateTemplateDto {
       @ApiProperty({ type: String })
       @IsNotEmpty({ message: 'Template Name is required' })
       template_name:String;
-      user_id:Types.ObjectId;
       template_id:Types.ObjectId;
       category_name:String;
     // @IsNotEmpty({ message: 'Original image is required' })
@@ -33,6 +32,8 @@ export class CreateTemplateDto {
        @Transform(({ value }) => (Array.isArray(value) ? value : Array(value)))
       tags: string[];
       feedType:FeedType;
+      // @IsNotEmpty({message:'json field required'})
+      // propertiesjson:String;
       @IsNotEmpty({ message: 'Template Status is required' })
       is_active:String;
 }

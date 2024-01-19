@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Res, InternalServerErrorException } from '@nestjs/common';
+import { Controller, Get, Body, Query, Res, InternalServerErrorException } from '@nestjs/common';
 import { Response } from 'express';
 import { AdminReportService } from './admin-report.service';
 
@@ -23,7 +23,7 @@ export class AdminReportController {
   }
 
   @Get('/mostactiveusers')
-  async findactiveUsers(@Body() {fromDatestring,toDateString},@Query('currentPage') currentPage: number, @Query('pageSize') pageSize: number, @Res() response:Response){
+  async findactiveUsers(@Query('fromDatestring') fromDatestring : string,@Query('toDateString') toDateString:string,@Query('currentPage') currentPage: number, @Query('pageSize') pageSize: number, @Res() response:Response){
     try{
       if(isNaN(currentPage) || isNaN(pageSize)){
         currentPage = 1;

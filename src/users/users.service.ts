@@ -43,13 +43,18 @@ export class UsersService {
     return user;
   }
 
-  async findAll() {
+  async findAll(page:number=0,pageSize:number=10) {
     try{
-      const data = await this.UserModel.find().sort({updatedAt:-1});
-      return {
-        success:true,
-        StatusCode:HttpStatus.CREATED,
-        data: data
+      const skip = (page - 1) * pageSize;
+      const data = await this.UserModel.find().sort({updatedAt:-1}).skip(skip).limit(pageSize);
+      const totalUsers = await this.UserModel.countDocuments();
+      return{
+        success: true,
+        StatusCode:HttpStatus.OK,
+        data:{data,
+          currentPage: page,
+          totalPages: Math.ceil(totalUsers / pageSize),
+          pageSize}
       }
     }
     catch(error){

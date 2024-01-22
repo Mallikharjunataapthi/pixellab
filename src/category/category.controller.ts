@@ -63,11 +63,19 @@ export class CategoryController {
       throw InternalServerErrorException;
     } 
   }
-
   @Get('/activelist')
   async findActiveCategories(@Res() response:Response){
     try{
       const data = await this.categoryService.getActiveCategories();
+      response.status(data.StatusCode).json(data);
+    }catch(error){
+      throw InternalServerErrorException;
+    }
+  }
+  @Get('/activelist/:id')
+  async findActiveappCategories(@Param('id') id: string,@Res() response:Response){
+    try{
+      const data = await this.categoryService.getActiveAppCategories(id);
       response.status(data.StatusCode).json(data);
     }catch(error){
       throw InternalServerErrorException;

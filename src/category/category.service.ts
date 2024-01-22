@@ -37,7 +37,7 @@ export class CategoryService {
   async findAll(page:number=0,pageSize:number=10) {
     try{
       const skip = (page - 1) * pageSize;
-      const result = await this.CategoryModel.find().sort({ updatedAt: -1 }).skip(skip).limit(pageSize);
+      const result = await this.CategoryModel.find().sort({ updatedAt: -1 }).skip(skip).limit(pageSize).populate('app_id', 'app_name');
       const totalCategories = await this.CategoryModel.countDocuments();
       if(result){
         return {
@@ -91,6 +91,30 @@ export class CategoryService {
       }
     }
   }
+  async getActiveAppCategories(id: string){
+    try{
+      const result = await this.CategoryModel.find({is_active:'1',app_id: id} ).sort({updatedAt:-1});
+      if(result){
+        return {
+          success:true,
+          StatusCode:HttpStatus.OK,
+          data:{result}
+        }
+      }else{
+        return {
+          success:true,
+          StatusCode:HttpStatus.NOT_FOUND,
+          data:{result}
+        }
+      }
+    }catch(error){
+      return {
+        success:false,
+        StatusCode:HttpStatus.BAD_REQUEST,
+        message:'Category Fetching failed'
+      }
+    }
+  }
   async findOne(id: String) {
     try{
       const result = await this.CategoryModel.findById(id);
@@ -119,6 +143,7 @@ export class CategoryService {
     try{
           // this flag used to validate schema for update operations
       const opts = { runValidators: true };
+      
        const result = await this.CategoryModel.findOneAndUpdate({_id:id},updateCategoryDto,opts);
         if(result){
           await this.updatecategory(id, updateCategoryDto)
@@ -134,7 +159,21 @@ export class CategoryService {
             message:'Category id not found'
           }
         }
-    }catch(error){
+    }catch(error:any){
+      if (error.code === 11000 ) {
+        return {
+          success: false,
+          StatusCode:HttpStatus.BAD_REQUEST,
+          message: 'Category already exists',
+        };
+      }
+      if (error.message == "Category already exists") {
+        return {
+          success: false,
+          StatusCode:HttpStatus.BAD_REQUEST,
+          message: error.message,
+        };
+      }
       return {
         StatusCode:HttpStatus.BAD_REQUEST,
         success:false,

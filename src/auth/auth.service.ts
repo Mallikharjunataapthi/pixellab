@@ -16,13 +16,17 @@ export class AuthService {
         const createUser = { ...Userdata,password:hasedpassword }
 
         const data = await this.usersService.create(createUser);
-         return data;
+        return {
+          success: true,
+          StatusCode:HttpStatus.CREATED,
+          message: 'User Name Created',
+        };
       }catch(err:any){
         if (err.code === 11000) {
           return {
             success: false,
             StatusCode:HttpStatus.BAD_REQUEST,
-            message: 'Template Name already exists',
+            message: 'User Name already exists',
           };
         }
         throw  new Error(err);

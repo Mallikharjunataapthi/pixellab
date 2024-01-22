@@ -1,15 +1,18 @@
-import { Controller, Get, Res, InternalServerErrorException } from '@nestjs/common';
+import { Controller, Get, Query, InternalServerErrorException } from '@nestjs/common';
 import { UsersService } from './users.service';
 
-import {Response} from "express"
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
   @Get()
-  async findAll(@Res() response:Response) {
+  async findAll(@Query('currentPage') currentPage: number, @Query('pageSize') pageSize: number) {
     try{
-      const result = await this.usersService.findAll();
-      response.status(result.StatusCode).json(result);
+      if(isNaN(currentPage) || isNaN(pageSize)){
+        currentPage = 1;
+        pageSize = 10;
+      }
+      const result = await this.usersService.findAll(currentPage,pageSize);
+      return result;
     }catch(error){
       throw new InternalServerErrorException(error);
     }

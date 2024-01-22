@@ -12,12 +12,12 @@ export class AuthController {
     @Post('signup')
     async create(@Body() createUserDto: CreateUserDto) {
       try{ 
-        await this.AuthService.create(createUserDto);
-        return {
-          success:true,
-          message: 'User created successfully',
-          StatusCode: HttpStatus.CREATED,
-        };
+        return await this.AuthService.create(createUserDto);
+        // return {
+        //   success:true,
+        //   message: 'User created successfully',
+        //   StatusCode: HttpStatus.CREATED,
+        // };
       }catch(err){
         throw MongooseError
       }

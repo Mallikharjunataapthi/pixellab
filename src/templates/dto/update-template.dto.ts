@@ -10,6 +10,9 @@ enum FeedType {
     }
     
 export class UpdateTemplateDto extends PartialType(CreateTemplateDto) {
+      @IsNotEmpty({ message: 'App is required' })
+      @IsString({ message: 'App must be a string' })
+      readonly app_id:String;
       @IsNotEmpty({ message: 'Category is required' })
       @IsString({ message: 'Category must be a string' })
       cat_id:Types.ObjectId;

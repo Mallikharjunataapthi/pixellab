@@ -44,9 +44,17 @@ export class TemplatesService {
         return {
           success: false,
           StatusCode:HttpStatus.BAD_REQUEST,
-          message: 'Template Name already exists',
+          message: 'Template already exists',
         };
       }
+      if (err.code === "Template already exists") {
+        return {
+          success: false,
+          StatusCode:HttpStatus.BAD_REQUEST,
+          message: 'Template already exists',
+        };
+      }
+      
         throw  new Error(err);
     }
   }
@@ -62,7 +70,7 @@ export class TemplatesService {
   async findAll(page:number=0,pageSize:number=10) {
     try{
       const skip = (page - 1) * pageSize;
-      const result = await this.TemplateModel.find().sort({ updatedAt: -1 }).skip(skip).limit(pageSize);
+      const result = await this.TemplateModel.find().sort({ updatedAt: -1 }).skip(skip).limit(pageSize).populate('app_id', 'app_name');
       const totalTemplates = await this.TemplateModel.countDocuments();
       if(result){
         return {
@@ -144,6 +152,7 @@ export class TemplatesService {
        updateTemplateDto.cat_id = new Types.ObjectId(updateTemplateDto.cat_id);
        const categoryName = await this.CategoryModel.findById(updateTemplateDto.cat_id);
        const updateObject: any = {
+        app_id:updateTemplateDto.app_id,
         cat_id: new Types.ObjectId(updateTemplateDto.cat_id),
         template_name: updateTemplateDto.template_name,
         is_active: updateTemplateDto.is_active,
@@ -170,7 +179,14 @@ export class TemplatesService {
         return {
           success: false,
           StatusCode:HttpStatus.BAD_REQUEST,
-          message: 'Template Name already exists',
+          message: 'Template  already exists',
+        };
+      }
+      if (err.code === "Template already exists") {
+        return {
+          success: false,
+          StatusCode:HttpStatus.BAD_REQUEST,
+          message: 'Template already exists',
         };
       }
         throw  new Error(err);

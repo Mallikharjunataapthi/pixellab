@@ -27,6 +27,13 @@ export class TagsService {
           message: 'Tag already exists',
         };
       }
+      if (err.message === 'Tag already exists') {
+        return {
+          success: false,
+          StatusCode:HttpStatus.BAD_REQUEST,
+          message: 'Tag already exists',
+        };
+      }
         throw  new Error(err);
     }
   }
@@ -34,7 +41,7 @@ export class TagsService {
   async findAll(page:number=0,pageSize:number=10) {
     try {
       const skip = (page - 1) * pageSize;
-      const result = await this.tagsModel.find().sort({ updatedAt: -1 }).skip(skip).limit(pageSize);
+      const result = await this.tagsModel.find().sort({ updatedAt: -1 }).skip(skip).limit(pageSize).populate('app_id', 'app_name');
       const totalTags = await this.tagsModel.countDocuments();
       return{
         success: true,
@@ -85,6 +92,18 @@ async update(id: string, updateTagDto: UpdateTagDto) {
   async findAllActiveList(){
     try {
       const result = await this.tagsModel.find({is_active:1}).sort({ updatedAt: -1 });
+      return{
+        success: true,
+        StatusCode:HttpStatus.OK,
+        data:{result}
+      }
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
+  }
+  async findAllActiveAppList(id: string){
+    try {
+      const result = await this.tagsModel.find({is_active:1, app_id: id} ).sort({ updatedAt: -1 });
       return{
         success: true,
         StatusCode:HttpStatus.OK,

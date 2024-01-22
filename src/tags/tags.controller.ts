@@ -22,6 +22,15 @@ export class TagsController {
     }
    
   }
+  @Get('/activelist/:id')
+  async findActiveapplist(@Param('id') id: string,@Res() response:Response){
+    try{
+      const data = await this.tagsService.findAllActiveAppList(id);
+      response.status(data.StatusCode).json(data);
+    }catch(error){
+      throw new InternalServerErrorException(error);
+    }
+  }
   @Get('/activelist')
   async findActivelist(@Res() response:Response){
     try{

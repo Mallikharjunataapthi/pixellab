@@ -1,5 +1,5 @@
 import { Prop, Schema,SchemaFactory } from "@nestjs/mongoose";
-import { Types } from "mongoose";
+import { Types, Model } from "mongoose";
 
 enum CategoryType {
   Pro = 'Pro',
@@ -16,6 +16,11 @@ enum FeedType {
 })
 
 export class Template{
+  @Prop({
+    // required:[true, 'Category required'],
+    type:Types.ObjectId, ref:'Apps'
+  })
+  app_id:Types.ObjectId;
 
   @Prop({
     // required:[true, 'Category required'],
@@ -64,3 +69,42 @@ export class Template{
 export type TemplateDocument = Template & Document;
 
 export const TemplateSchema = SchemaFactory.createForClass(Template)
+TemplateSchema.pre('save', async function (next) {
+  const TemplateModel = this.constructor as Model<TemplateDocument>;
+
+  const existingTag = await TemplateModel.findOne({
+    app_id: this.app_id,
+    template_name: this.template_name,
+    cat_id : this.cat_id.toString(),
+  });
+
+  if (existingTag) {
+    const error = new Error('Template already exists',);
+    next(error);
+  } else {
+    next();
+  }
+});
+TemplateSchema.pre('updateOne', async function (next) {
+  const query = this.getQuery();
+  const update = this.getUpdate() as { app_id?: any; cat_id?: any; template_name?: any };
+
+  const template_name = update?.template_name;
+  const app_id = update?.app_id;
+  const cat_id = update.cat_id.toString();
+  const TemplateModel = this.model as Model<TemplateDocument>;
+  const existingTemplate = await TemplateModel.findOne({
+      app_id: app_id,
+      cat_id:cat_id,
+      template_name: template_name,
+      _id: { $ne: query._id },
+  });
+
+  if (existingTemplate) {
+   
+    const error = new Error("Template already exists");
+    next(error);
+  } else {
+      next();
+  }
+});

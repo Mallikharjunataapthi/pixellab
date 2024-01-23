@@ -10,14 +10,14 @@ export class AuthController {
 
     @Public()
     @Post('signup')
-    async create(@Body() createUserDto: CreateUserDto) {
+    async create(@Body() createUserDto: CreateUserDto,@Res() response: Response) {
       try{ 
-        return await this.AuthService.create(createUserDto);
-        // return {
-        //   success:true,
-        //   message: 'User created successfully',
-        //   StatusCode: HttpStatus.CREATED,
-        // };
+        const result = await this.AuthService.create(createUserDto);
+        return response.status(result.StatusCode).json({
+          success:result.success,
+          StatusCode:result.StatusCode,
+          message:result.message,
+        })
       }catch(err){
         throw MongooseError
       }

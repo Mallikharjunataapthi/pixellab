@@ -15,10 +15,10 @@ export class AuthService {
         const hasedpassword = await bcrypt.hash(password,10);
         const createUser = { ...Userdata,password:hasedpassword }
 
-        const data = await this.usersService.create(createUser);
+        await this.usersService.create(createUser);
         return {
           success: true,
-          StatusCode:HttpStatus.CREATED,
+          StatusCode:HttpStatus.OK,
           message: 'User Name Created',
         };
       }catch(err:any){

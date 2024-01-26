@@ -6,7 +6,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
   timestamps: true,
 })
 export class Apps {
-  @Prop({ type:String, required:true , unique: true})
+  @Prop({ unique: true, required:true})
   app_name:String
   @Prop({ type:String,default: '1'})
   is_exist:string;

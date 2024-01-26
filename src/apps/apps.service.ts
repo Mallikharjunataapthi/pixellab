@@ -32,7 +32,7 @@ export class AppsService {
   async findAll(page:number=0,pageSize:number=10) {
     try {
       const skip = (page - 1) * pageSize;
-      const data = await this.AppsSchemaModel.find().skip(skip).limit(pageSize);
+      const data = await this.AppsSchemaModel.find().sort({updatedAt:-1}).skip(skip).limit(pageSize);
       const totalPages = await this.AppsSchemaModel.countDocuments()
       return {
         success:true,

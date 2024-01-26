@@ -13,7 +13,7 @@ export enum FeedType {
 export class CreateTemplateDto {
     @IsNotEmpty({ message: 'App is required' })
     @IsString({ message: 'App must be a string' })
-    readonly app_id:String;
+    app_id:Types.ObjectId;
     @ApiProperty({ type: Types.ObjectId })
     @IsNotEmpty({ message: 'Category is required' })
     @IsString({ message: 'Category must be a string' })

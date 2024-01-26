@@ -20,12 +20,15 @@ export class AppsService {
         StatusCode:HttpStatus.CREATED,
         messgae:`successfully added`
       }
-    }catch(error){
-      return {
-        success:false,
-        StatusCode:HttpStatus.BAD_REQUEST,
-        messgae:`Failed to fetch data : ${error}`
+    }catch(error:any){
+      if (error.code === 11000) {
+        return {
+          success: false,
+          StatusCode:HttpStatus.BAD_REQUEST,
+          message: 'App already exists',
+        };
       }
+      throw  new Error(error);
     }
   }
 

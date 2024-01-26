@@ -27,7 +27,7 @@ export class TemplatesService {
     try{
 
       createTemplateDto.cat_id = new Types.ObjectId(createTemplateDto.cat_id);
-
+      createTemplateDto.app_id = new Types.ObjectId(createTemplateDto.app_id);
       
       const categoryName = await this.CategoryModel.findById(createTemplateDto.cat_id);
 

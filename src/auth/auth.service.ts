@@ -13,7 +13,7 @@ export class AuthService {
       try{
         const {password, ...Userdata} = createUserDto;
         const hasedpassword = await bcrypt.hash(password,10);
-        const createUser = { ...Userdata,password:hasedpassword }
+        const createUser = { ...Userdata,password:hasedpassword,role_id:0 }
 
         await this.usersService.create(createUser);
         return {
@@ -22,7 +22,7 @@ export class AuthService {
           message: 'User Name Created',
         };
       }catch(err:any){
-        if (err.code === 11000) {
+        if (err.code === 11000 || err.message == 'user already exists') {
           return {
             success: false,
             StatusCode:HttpStatus.BAD_REQUEST,

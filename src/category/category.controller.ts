@@ -84,13 +84,13 @@ export class CategoryController {
 
   @Public()
   @Get('/mobilecategories')
-  async findCategorywithImage(@Query('currentPage') currentPage: number, @Query('pageSize') pageSize: number, @Res() response:Response){
+  async findCategorywithImage(@Query('app_id') app_id: string,@Query('currentPage') currentPage: number, @Query('pageSize') pageSize: number, @Res() response:Response){
     try{
       if(isNaN(currentPage) || isNaN(pageSize)){
         currentPage = 1;
         pageSize = 10;
       }
-      const data = await this.categoryService.findMobileCategories(currentPage,pageSize);
+      const data = await this.categoryService.findMobileCategories(app_id,currentPage,pageSize);
       response.status(data.StatusCode).json(data);
     }catch(error){
       throw new InternalServerErrorException(error);;

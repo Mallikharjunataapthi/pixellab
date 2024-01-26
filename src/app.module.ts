@@ -18,16 +18,17 @@ import { UserTemplatesModule } from './user-templates/user-templates.module';
 import { ReportTemplateModule } from './report-template/report-template.module';
 import { AdminReportModule } from './admin-report/admin-report.module';
 import { AppsModule } from './apps/apps.module';
+import { AppUserModule } from './app-user/app-user.module';
 @Module({
   imports: [ConfigModule.forRoot({
     envFilePath: '.env',
     isGlobal: true,
   }),
-  UsersModule,MongooseModule.forRoot(process.env.DB_URI), AuthModule, CategoryModule, TemplatesModule, LikesModule, TagsModule, UserTemplatesModule, ReportTemplateModule, AdminReportModule, AppsModule],
+  UsersModule,MongooseModule.forRoot(process.env.DB_URI), AuthModule, CategoryModule, TemplatesModule, LikesModule, TagsModule, UserTemplatesModule, ReportTemplateModule, AdminReportModule, AppsModule, AppUserModule],
   controllers: [AppController],
   providers: [{
     provide: APP_GUARD,
     useClass: AuthGuard,
-  },AppService,],
+  },AppService],
 })
 export class AppModule {}

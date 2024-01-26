@@ -14,7 +14,7 @@ export class AdminReportService {
  async MostUsedTemplates(page:number=0,pageSize:number=10) {
     try{
       const skip = (page - 1) * pageSize;
-      const result = await this.TemplateModel.find().sort({ used_count: -1 }).skip(skip).limit(pageSize);
+      const result = await this.TemplateModel.find().sort({ used_count: -1 }).skip(skip).limit(pageSize).populate("app_id","app_name");
       const totalCategories = await this.TemplateModel.countDocuments();
       if(result){
         return {
@@ -94,7 +94,7 @@ export class AdminReportService {
                   $eq: [ '$_id', { $toObjectId: '$$userIdString' } ]
                 }
               }
-            }
+            },
           ],
           as: 'userDetails'
         }
@@ -104,7 +104,8 @@ export class AdminReportService {
           _id: 0,
           user_id: '$_id',
           userCount: 1,
-          userName: '$userDetails.username'
+          userName: '$userDetails.username',
+          appName: '$userDetails.app_name'
         }
       }
     );

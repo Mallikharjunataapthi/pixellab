@@ -209,11 +209,20 @@ export class CategoryService {
       };
     }
   }
-  async findMobileCategories(page:number,pageSize:number) {
+  async findMobileCategories(app_id:string, page:number, pageSize:number) {
 
     const skip = (page - 1) * pageSize;
-    const totalCategories = await this.CategoryModel.countDocuments({is_active:1});
-    const result = await this.CategoryModel.aggregate([
+    const totalCategories = await this.CategoryModel.countDocuments({
+      is_active:1,
+      app_id: app_id
+    });
+    const result = await this.CategoryModel.aggregate([ 
+      {
+        $match:{
+          app_id:app_id,
+          is_active:'1',
+        }
+      },
       {
         $lookup: {
           from: 'templates',
@@ -248,6 +257,7 @@ export class CategoryService {
           cat_id: '$_id',
           cat_name: 1,
           is_active: 1,
+          app_id: app_id,
           latestTemplates: { $slice: ['$latestTemplates', 5] },
         },
       },

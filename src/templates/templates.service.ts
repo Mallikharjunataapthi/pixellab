@@ -195,7 +195,7 @@ export class TemplatesService {
 
   async updatereused_count(id:Types.ObjectId, data:number){
     try{
-      await this.TemplateModel.updateOne({_id:id},{used_count:data});
+      await this.TemplateModel.findByIdAndUpdate(id,{used_count:data});
       return;
     }catch(error){
       throw new InternalServerErrorException(error);
@@ -344,7 +344,7 @@ export class TemplatesService {
     }
   }
 
-  async findToptemplates(page:number=0,pageSize:number=10){
+  async findToptemplates(app_id:string,page:number=0,pageSize:number=10){
     try {
       const skip = (page - 1) * pageSize;
       // start of the current month
@@ -357,7 +357,7 @@ export class TemplatesService {
       endOfMonth.setMonth(endOfMonth.getMonth() + 1);
       endOfMonth.setDate(0);
       endOfMonth.setHours(23, 59, 59, 999);
-      const totalTemplates = await this.TemplateModel.countDocuments();
+      const totalTemplates = await this.TemplateModel.countDocuments({app_id:app_id});
       const result = await this.TemplateModel.aggregate([
         {
           $match: {
@@ -367,6 +367,7 @@ export class TemplatesService {
             },
             is_approved: 'Approved',
             is_active:'1',
+            app_id:app_id,
           },
         },
         {
@@ -399,13 +400,13 @@ export class TemplatesService {
     }
   }
 
-  async findTrendingtemplates(page:number=0, pageSize:number=10){
+  async findTrendingtemplates(app_id:string,page:number=0, pageSize:number=10){
     try {
       const skip = (page - 1) * pageSize;
-      const result = await this.TemplateModel.find({is_approved:'Approved',is_active:"1"})
+      const result = await this.TemplateModel.find({is_approved:'Approved',is_active:"1",app_id:app_id})
       .sort({ used_count: -1 }).skip(skip)
       .limit(pageSize).select({ propertiesjson: 0 });
-      const totalTemplates = await this.TemplateModel.countDocuments();
+      const totalTemplates = await this.TemplateModel.countDocuments({app_id:app_id});
       return {
         success:true,
         StatusCode:HttpStatus.OK,
@@ -418,13 +419,13 @@ export class TemplatesService {
      throw new InternalServerErrorException(error);
     }
   }
-  async findRecenttemplates(page:number=0, pageSize:number=10){
+  async findRecenttemplates(app_id:string,page:number=0, pageSize:number=10){
     try {
       const skip = (page - 1) * pageSize;
-      const result = await this.TemplateModel.find({is_approved:'Approved', is_active:"1"})
+      const result = await this.TemplateModel.find({is_approved:'Approved', is_active:"1",app_id:app_id})
       .sort({ createdAt: -1 }).skip(skip)
       .limit(pageSize).select({ propertiesjson: 0 });
-      const totalTemplates = await this.TemplateModel.countDocuments();
+      const totalTemplates = await this.TemplateModel.countDocuments({app_id:app_id});
       return {
         success:true,
         StatusCode:HttpStatus.OK,
@@ -440,7 +441,7 @@ export class TemplatesService {
 
   async approveUserTemplate(template_id:Types.ObjectId){
     try {
-      await this.TemplateModel.updateOne({_id:template_id},{is_approved:'Approved'});
+      await this.TemplateModel.findByIdAndUpdate(template_id,{is_approved:'Approved'});
       return{
         success:true,
         StatusCode:HttpStatus.OK,
@@ -453,7 +454,7 @@ export class TemplatesService {
   }
   async declineUserTemplate(template_id:Types.ObjectId){
     try {
-      await this.TemplateModel.updateOne({_id:template_id},{is_approved:'Declined'});
+      await this.TemplateModel.findByIdAndUpdate(template_id,{is_approved:'Declined'});
       return{
         success:true,
         StatusCode:HttpStatus.OK,

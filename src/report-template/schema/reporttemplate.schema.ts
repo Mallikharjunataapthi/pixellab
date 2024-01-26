@@ -5,6 +5,10 @@ import { Types } from 'mongoose';
     timestamps:true,
 })
 export class ReportTemplate {
+    @Prop({
+        type:Types.ObjectId, ref:'Apps'
+      })
+      app_id:Types.ObjectId;
     @Prop({ type:Types.ObjectId, required:true, ref:"User"})
     user_id:Types.ObjectId;
     @Prop({ type:Types.ObjectId, required:true, ref:"Template"})
@@ -13,6 +17,8 @@ export class ReportTemplate {
     feedback:string
     @Prop({ type:String, default:1})
     is_active:string
+    @Prop({ type:String })
+    app_name:string
 }
 
 export const ReportTemplateSchemaSchema = SchemaFactory.createForClass(ReportTemplate);

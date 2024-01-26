@@ -91,7 +91,7 @@ TemplateSchema.pre('updateOne', async function (next) {
 
   const template_name = update?.template_name;
   const app_id = update?.app_id;
-  const cat_id = update.cat_id.toString();
+  const cat_id = update?.cat_id.toString();
   const TemplateModel = this.model as Model<TemplateDocument>;
   const existingTemplate = await TemplateModel.findOne({
       app_id: app_id,

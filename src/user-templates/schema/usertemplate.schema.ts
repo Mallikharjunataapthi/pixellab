@@ -16,7 +16,11 @@ enum CategoryType {
     timestamps:true,
 })
 export class UserTemplate {
-    @Prop({
+      @Prop({
+        type:Types.ObjectId, ref:'Apps'
+      })
+      app_id:Types.ObjectId;
+      @Prop({
         required:[true, 'Category required'],
         type:Types.ObjectId, ref:'Category'
       })
@@ -47,6 +51,8 @@ export class UserTemplate {
       tags: string[];
       @Prop({ required: true, enum: ['1', '0'], default: '1' })
       is_active:String;
+      @Prop({ type:String })
+      app_name:string;
 }
 
 export const UserTemplateSchema = SchemaFactory.createForClass(UserTemplate);

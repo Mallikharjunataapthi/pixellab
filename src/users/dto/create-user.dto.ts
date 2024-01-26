@@ -1,9 +1,12 @@
-import { IsNotEmpty, IsString } from "class-validator";
+import { IsNotEmpty, IsOptional, IsString } from "class-validator";
 
 export class CreateUserDto {
-    @IsNotEmpty()
+    @IsString()
+    @IsOptional()
+    readonly app_id:String;
+    @IsNotEmpty({ message: 'User Name is required' })
     @IsString()
     readonly username:String;
-    @IsNotEmpty({ message: 'Password is required' })
+    @IsNotEmpty()
     readonly password:String;
 }

@@ -13,5 +13,6 @@ import { TemplatesModule } from 'src/templates/templates.module';
   ],
   controllers: [AppsController],
   providers: [AppsService],
+  exports: [AppsService,MongooseModule],
 })
 export class AppsModule {}

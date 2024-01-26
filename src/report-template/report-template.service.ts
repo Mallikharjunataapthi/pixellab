@@ -6,22 +6,48 @@ import { Model, Types } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { TemplatesService } from 'src/templates/templates.service';
 import { UsersService } from 'src/users/users.service';
+import { Apps } from 'src/apps/schema/apps.schema';
 
 @Injectable()
 export class ReportTemplateService {
   constructor(
     private userservice:UsersService,
     private templateservice:TemplatesService,
-    
+    @InjectModel(Apps.name) private AppsModel: Model<Apps>,
     @InjectModel(ReportTemplate.name) private ReportTemplateSchemaSchemaModel: Model<ReportTemplate>
   ){}
   async create(createReportTemplateDto: CreateReportTemplateDto) {
     try {
-      await this.ReportTemplateSchemaSchemaModel.create(createReportTemplateDto);
-      return{
-        success:true,
-        StatusCode:HttpStatus.CREATED,
-        message:'created successfully'
+      const objectIdAsString: string = createReportTemplateDto?.app_id?.toString() || '';
+      const appIdlength: number = objectIdAsString.length;
+      if ( appIdlength == 24 ) {
+        const appid = new Types.ObjectId(createReportTemplateDto.app_id);
+        const AppName = await this.AppsModel.findById(appid);
+        if (AppName != undefined && AppName != null && AppName.app_name != undefined && AppName.app_name != null) { 
+          const reportTemplate = {
+            ...createReportTemplateDto,
+            app_id: appid,
+            app_name: AppName.app_name,
+          }
+          await this.ReportTemplateSchemaSchemaModel.create(reportTemplate);
+          return{
+            success:true,
+            StatusCode:HttpStatus.CREATED,
+            message:'created successfully'
+          }
+        } else {
+          return{
+            success:true,
+            StatusCode:HttpStatus.BAD_REQUEST,
+            message:'App Id Not Found'
+          }
+        }
+      } else{
+        return{
+          success:true,
+          StatusCode:HttpStatus.BAD_REQUEST,
+          message:'App Id Is Worng'
+        }
       }
     } catch (error) {
       throw new InternalServerErrorException(error);

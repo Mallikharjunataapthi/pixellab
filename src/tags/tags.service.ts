@@ -73,6 +73,7 @@ async update(id: string, updateTagDto: UpdateTagDto) {
           // this flag used to validate schema for update operations
       const opts = { runValidators: true };
       const updateObj:CreateTagDto = {
+        app_id : updateTagDto.app_id,
         tag_name : updateTagDto.tag_name,
         is_active : updateTagDto.is_active
       }

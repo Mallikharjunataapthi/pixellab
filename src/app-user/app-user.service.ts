@@ -17,7 +17,7 @@ export class AppUserService {
 
     try{
       if( createAppUserDto?.app_id.length == 24 ){
-        const appid = new Types.ObjectId(createAppUserDto.app_id);
+        const appid = createAppUserDto.app_id;
         const AppName = await this.AppsModel.findById(appid);
         if (AppName != undefined && AppName != null && AppName.app_name != undefined && AppName.app_name != null) {
           const createUser = {...createAppUserDto ,app_name:AppName.app_name}

@@ -13,6 +13,8 @@ export class AppUser{
     username:String;
     @Prop({ required: true})
     email:String;
+    @Prop({ required: false})
+    app_name:String;
     @Prop({ required: true})
     profile_img:String;
     @Prop({ required:true, default:1})

@@ -2,7 +2,7 @@ import { IsNotEmpty, IsOptional, IsString } from "class-validator";
 export class CreateAppUserDto {
     @IsNotEmpty({ message: 'App is required' })
     @IsString({ message: 'App must be a string' })
-    app_id:string;
+    app_id:String;
     @IsNotEmpty({ message: 'User Name is required' })
     @IsString()
     readonly username:string;

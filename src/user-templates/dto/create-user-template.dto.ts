@@ -17,5 +17,4 @@ export class CreateUserTemplateDto {
     user_temp_before_image_url:string;
     @IsNotEmpty({ message: 'Template Id is required' })
     user_temp_after_image_url:string;
-    user_temp_template_desc:string;
 }

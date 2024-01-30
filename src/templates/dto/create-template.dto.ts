@@ -35,8 +35,7 @@ export class CreateTemplateDto {
        @Transform(({ value }) => (Array.isArray(value) ? value : Array(value)))
       tags: string[];
       feedType:FeedType;
-      // @IsNotEmpty({message:'json field required'})
-      // propertiesjson:String;
+      template_desc:String;
       @IsNotEmpty({ message: 'Template Status is required' })
       is_active:String;
 }

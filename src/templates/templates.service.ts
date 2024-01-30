@@ -160,6 +160,7 @@ export class TemplatesService {
         category_name : categoryName.cat_name,
         tags:updateTemplateDto.tags,
         feedType:updateTemplateDto.feedType,
+        template_desc:updateTemplateDto.template_desc,
       }; 
       updateObject.category_name = categoryName.cat_name;
       if(beforeImageS3URL){

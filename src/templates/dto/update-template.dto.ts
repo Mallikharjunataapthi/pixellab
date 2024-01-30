@@ -29,4 +29,5 @@ export class UpdateTemplateDto extends PartialType(CreateTemplateDto) {
       is_free:String;
       @IsNotEmpty({ message: 'Template Status is required' })
       is_active:String;
+      template_desc:String;
 }

@@ -50,16 +50,7 @@ export class UserTemplatesService {
           }catch(error){
           throw new InternalServerErrorException(error);
           }
-          
 
-          const hashtagRegex = /#(\w+)/g;
-        // const tags =   createUserTemplateDto.user_temp_template_desc.match(hashtagRegex);
-          const modifiedHashtags = [];
-          let match:any;
-
-          while ((match = hashtagRegex.exec(createUserTemplateDto.user_temp_template_desc)) !== null) {
-              modifiedHashtags.push(match[1]);
-          }
           const UsertempalteObject = {
             app_id: new Types.ObjectId(createUserTemplateDto.user_temp_app_id),
             app_name:AppName.app_name,
@@ -74,9 +65,9 @@ export class UserTemplatesService {
             is_active:templateData.data.is_active,
             used_count:templateData.data.used_count,
             wishlist_count:0,
-            tags:modifiedHashtags,
+            tags:templateData.data.tags,
             feedType:templateData.data.feedType,
-            template_desc:createUserTemplateDto.user_temp_template_desc,
+            template_desc:templateData.data.template_desc,
             is_approved:'Pending',
           }
           await this. templatesService.createUserTemplate(UsertempalteObject);

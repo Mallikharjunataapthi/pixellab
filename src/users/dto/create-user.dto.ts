@@ -7,6 +7,6 @@ export class CreateUserDto {
     @IsNotEmpty({ message: 'User Name is required' })
     @IsString()
     readonly username:String;
-    @IsNotEmpty()
+    @IsNotEmpty({ message: 'Password is required' })
     readonly password:String;
 }

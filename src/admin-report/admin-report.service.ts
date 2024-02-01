@@ -49,7 +49,9 @@ export class AdminReportService {
       const skip = (page - 1) * pageSize;
 
       const fromDate = new Date(fromDatestring); // Replace with your actual from date
+      fromDate.setHours(0, 0, 0, 0)
       const toDate = new Date(toDatestring);
+      toDate.setHours(23, 59, 59, 999);
       const filter = {
         createdAt: {
           $gte: fromDate,

@@ -3,11 +3,11 @@ import { ReportTemplateService } from './report-template.service';
 import { CreateReportTemplateDto } from './dto/create-report-template.dto';
 import { UpdateReportTemplateDto } from './dto/update-report-template.dto';
 import { Response } from 'express';
-
+import { Public } from 'src/common/public.middleware';
 @Controller('report-template')
 export class ReportTemplateController {
   constructor(private readonly reportTemplateService: ReportTemplateService) {}
-
+  @Public()
   @Post()
   async create(@Body() createReportTemplateDto: CreateReportTemplateDto, @Res() response:Response) {
     try {

@@ -8,7 +8,7 @@ import { Public } from 'src/common/public.middleware';
 @Controller('user-templates')
 export class UserTemplatesController {
   constructor(private readonly userTemplatesService: UserTemplatesService) {}
-
+  @Public()
   @Post()
   async create(@Body() createUserTemplateDto: CreateUserTemplateDto, @Res() response:Response) {
     try{

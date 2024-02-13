@@ -382,7 +382,7 @@ export class TemplatesService {
         },
         {
           $project: {
-            propertiesjson:0
+            template_desc:0
           }
         }
       ]);
@@ -406,7 +406,7 @@ export class TemplatesService {
       const skip = (page - 1) * pageSize;
       const result = await this.TemplateModel.find({is_approved:'Approved',is_active:"1",app_id:app_id})
       .sort({ used_count: -1 }).skip(skip)
-      .limit(pageSize).select({ propertiesjson: 0 });
+      .limit(pageSize).select({ template_desc: 0 });
       const totalTemplates = await this.TemplateModel.countDocuments({app_id:app_id});
       return {
         success:true,
@@ -425,7 +425,7 @@ export class TemplatesService {
       const skip = (page - 1) * pageSize;
       const result = await this.TemplateModel.find({is_approved:'Approved', is_active:"1",app_id:app_id})
       .sort({ createdAt: -1 }).skip(skip)
-      .limit(pageSize).select({ propertiesjson: 0 });
+      .limit(pageSize).select({ template_desc: 0 });
       const totalTemplates = await this.TemplateModel.countDocuments({app_id:app_id});
       return {
         success:true,
@@ -468,7 +468,7 @@ export class TemplatesService {
   }
 
   async findTmeplate(id:Types.ObjectId){
-    const data =  await this.TemplateModel.findOne({_id:id}).select({ propertiesjson: 1,template_name:1 });
+    const data =  await this.TemplateModel.findOne({_id:id}).select({ template_desc: 1,template_name:1 });
     return {
       success:true,
       StatusCode:HttpStatus.OK,

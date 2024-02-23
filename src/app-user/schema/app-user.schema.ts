@@ -17,7 +17,7 @@ export class AppUser{
     app_name:String;
     @Prop({ required: true})
     profile_img:String;
-    @Prop({ required:true, default:1})
+    @Prop({ required:true, default:2})
     role_id:String;
     @Prop({ required: true, enum: ['1', '0'], default: '1' })
     is_active:String;

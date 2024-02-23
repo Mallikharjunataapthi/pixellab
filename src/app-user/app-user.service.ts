@@ -21,12 +21,26 @@ export class AppUserService {
         const AppName = await this.AppsModel.findById(appid);
         if (AppName != undefined && AppName != null && AppName.app_name != undefined && AppName.app_name != null) {
           const createUser = {...createAppUserDto ,app_name:AppName.app_name}
-          await this.UserModel.create(createUser);
-          return {
-            success: true,
-            StatusCode:HttpStatus.OK,
-            message: 'User Name Created',
-          };
+        const  existingUserDetails = await this.UserModel.findOne({
+            app_id: createAppUserDto.app_id,
+            email: createAppUserDto.email,
+          });
+          if(existingUserDetails != undefined && existingUserDetails !=null){
+            return {
+              success: true,
+              StatusCode:HttpStatus.OK,
+              message: 'User found',
+              userId: existingUserDetails._id,
+            };
+          } else {
+            const createdUserId = await this.UserModel.create(createUser);
+            return {
+              success: true,
+              StatusCode:HttpStatus.OK,
+              message: 'User Name Created',
+              userId: createdUserId._id,
+            };
+          }
         } else {
           return {
             success: false,

@@ -6,16 +6,22 @@ import { Model, Types } from 'mongoose';
 import { TemplateUsersReport, TemplateUserReportSchema } from './schema/usertemplatescount.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Apps } from 'src/apps/schema/apps.schema';
+import { FileUploadMiddleware } from 'src/common/fileupload.middleware';
 @Injectable()
 export class UserTemplatesService {
   constructor(
     @InjectModel(TemplateUsersReport.name) private TemplateUsersReportModel: Model<TemplateUsersReport>,
     @InjectModel(Apps.name) private AppsModel: Model<Apps>,
     private templatesService : TemplatesService,
+    private fileuploader:FileUploadMiddleware,
   ){}
-  async create(createUserTemplateDto: CreateUserTemplateDto) {
+  async create(createUserTemplateDto: CreateUserTemplateDto,files: { user_temp_before_image_url?: Express.Multer.File[], user_temp_after_image_url?: Express.Multer.File[] }) {
     try{
-     
+      const beforeImageFile = files.user_temp_before_image_url ? files.user_temp_before_image_url[0] : null;
+    const afterImageFile = files.user_temp_after_image_url ? files.user_temp_after_image_url[0] : null;
+
+    let beforeImageS3Response  = await this.fileuploader.s3_upload(beforeImageFile);
+    const afterImageS3Response = await this.fileuploader.s3_upload(afterImageFile);
       if ( createUserTemplateDto?.user_temp_app_id.length == 24 ) {
         const appid = new Types.ObjectId(createUserTemplateDto.user_temp_app_id);
         const AppName = await this.AppsModel.findById(appid);
@@ -46,18 +52,18 @@ export class UserTemplatesService {
           }
           
           try{
-            await this.TemplateUsersReportModel.create(userusedCount);
+            await this.TemplateUsersReportModel.create(userusedCount );
           }catch(error){
           throw new InternalServerErrorException(error);
           }
-
+       
           const UsertempalteObject = {
             app_id: new Types.ObjectId(createUserTemplateDto.user_temp_app_id),
             app_name:AppName.app_name,
             user_id: new Types.ObjectId(createUserTemplateDto.user_temp_user_id),
             template_id: new Types.ObjectId(createUserTemplateDto.user_temp_template_id),
-            before_image_url:createUserTemplateDto.user_temp_before_image_url,
-            after_image_url:createUserTemplateDto.user_temp_after_image_url,
+            before_image_url:beforeImageS3Response ?beforeImageS3Response : null,
+            after_image_url:afterImageS3Response ? afterImageS3Response : null,
             cat_id:templateData.data.cat_id,
             category_name:templateData.data.category_name,
             whishlist_count:0,

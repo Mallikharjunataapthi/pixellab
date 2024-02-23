@@ -6,6 +6,7 @@ import { UserTemplate, UserTemplateSchema } from './schema/usertemplate.schema.j
 import { TemplatesModule } from 'src/templates/templates.module';
 import { TemplateUsersReport, TemplateUserReportSchema } from './schema/usertemplatescount.schema';
 import { AppsModule } from 'src/apps/apps.module';
+import { FileUploadMiddleware } from 'src/common/fileupload.middleware';
 @Module({
   imports:[
     TemplatesModule,
@@ -21,7 +22,7 @@ import { AppsModule } from 'src/apps/apps.module';
   ],
   
   controllers: [UserTemplatesController],
-  providers: [UserTemplatesService],
+  providers: [UserTemplatesService,FileUploadMiddleware],
   exports: [UserTemplatesService,MongooseModule],
 })
 export class UserTemplatesModule {}

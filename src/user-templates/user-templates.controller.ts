@@ -1,18 +1,23 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Res, Query, InternalServerErrorException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Res, Query, InternalServerErrorException,UploadedFiles, UseInterceptors } from '@nestjs/common';
 import { UserTemplatesService } from './user-templates.service';
 import { CreateUserTemplateDto } from './dto/create-user-template.dto';
 import { UpdateUserTemplateDto } from './dto/update-user-template.dto';
 import { Response } from 'express';
 import { Public } from 'src/common/public.middleware';
+import { FileFieldsInterceptor } from '@nestjs/platform-express';
 
 @Controller('user-templates')
 export class UserTemplatesController {
   constructor(private readonly userTemplatesService: UserTemplatesService) {}
   @Public()
   @Post()
-  async create(@Body() createUserTemplateDto: CreateUserTemplateDto, @Res() response:Response) {
+  @UseInterceptors(FileFieldsInterceptor([
+    { name: 'user_temp_before_image_url', maxCount: 1 },
+    { name: 'user_temp_after_image_url', maxCount: 1 },
+  ]))
+  async create(@Body() createUserTemplateDto: CreateUserTemplateDto, @Res() response:Response, @UploadedFiles() files: { user_temp_before_image_url: Express.Multer.File[], user_temp_after_image_url: Express.Multer.File[] }) {
     try{
-      const result= await this.userTemplatesService.create(createUserTemplateDto);
+      const result= await this.userTemplatesService.create(createUserTemplateDto,files);
       response.status(result.StatusCode).json(result)
     }catch(error){
       throw new InternalServerErrorException(error);

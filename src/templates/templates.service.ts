@@ -152,7 +152,7 @@ export class TemplatesService {
        updateTemplateDto.cat_id = new Types.ObjectId(updateTemplateDto.cat_id);
        const categoryName = await this.CategoryModel.findById(updateTemplateDto.cat_id);
        const updateObject: any = {
-        app_id:updateTemplateDto.app_id,
+        app_id:new Types.ObjectId(updateTemplateDto.app_id),
         cat_id: new Types.ObjectId(updateTemplateDto.cat_id),
         template_name: updateTemplateDto.template_name,
         is_active: updateTemplateDto.is_active,
@@ -313,10 +313,10 @@ export class TemplatesService {
     try{
       const skip = (page - 1) * pageSize;
       const filter: {
-        app_id: string;
+        app_id: any;
         user_id?: any; // Make 'user_id' property optional
       } = {
-        app_id: app_id,
+        app_id: new Types.ObjectId(app_id),
       };
       
       if (users_id != undefined && users_id != null && users_id !== '') {

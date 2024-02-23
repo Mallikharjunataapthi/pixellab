@@ -71,14 +71,14 @@ export type TemplateDocument = Template & Document;
 export const TemplateSchema = SchemaFactory.createForClass(Template)
 TemplateSchema.pre('save', async function (next) {
   const TemplateModel = this.constructor as Model<TemplateDocument>;
-
-
-  const existingTag = await TemplateModel.findOne({
-    app_id: this.app_id,
-    template_name: this.template_name,
-    cat_id : this.cat_id,
-  });
-
+  let existingTag =null;
+  if(this.template_name != undefined){
+    existingTag = await TemplateModel.findOne({
+      app_id: this.app_id,
+      template_name: this.template_name,
+      cat_id : this.cat_id,
+    });
+  }
   if (existingTag) {
     const error = new Error('Template already exists',);
     next(error);

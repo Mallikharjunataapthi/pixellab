@@ -27,13 +27,13 @@ export class UserTemplatesController {
 
   @Public()
   @Get()
-  async findAll(@Query('currentPage') currentPage: number, @Query('pageSize') pageSize: number, @Res() res:Response) {
+  async findAll(@Query('currentPage') currentPage: number,@Query('app_id') app_id: string,@Query('user_id') user_id: string = '', @Query('pageSize') pageSize: number, @Res() res:Response) {
     try{
       if(isNaN(currentPage) || isNaN(pageSize)){
         currentPage = 1;
         pageSize = 10;
       }
-      const data = await this.userTemplatesService.findAll(currentPage,pageSize);
+      const data = await this.userTemplatesService.findAll(app_id,user_id,currentPage,pageSize);
       res.status(data.StatusCode).json(data);
     }catch(error){
       throw new InternalServerErrorException(error);

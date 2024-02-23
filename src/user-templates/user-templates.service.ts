@@ -45,7 +45,7 @@ export class UserTemplatesService {
           }
 
           const userusedCount = {
-            app_id:createUserTemplateDto.user_temp_app_id,
+            app_id:new Types.ObjectId(createUserTemplateDto.user_temp_app_id),
             user_id:createUserTemplateDto.user_temp_user_id,
             template_id:createUserTemplateDto.user_temp_template_id,
             app_name:AppName.app_name,
@@ -103,9 +103,9 @@ export class UserTemplatesService {
     
   }
 
-  findAll(currentPage:number=0,pageSize:number=10) {
+  findAll(app_id:string,user_id:string,currentPage:number=0,pageSize:number=10) {
     try {
-      const data = this.templatesService.getUserTemplates(currentPage,pageSize);
+      const data = this.templatesService.getUserTemplates(app_id,user_id,currentPage,pageSize);
       return data;
     } catch (error) {
       throw new InternalServerErrorException(error);

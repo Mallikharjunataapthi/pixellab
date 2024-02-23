@@ -309,12 +309,21 @@ export class TemplatesService {
       throw Error(`Something went Wrong: ${error}`)
     }
   }
-  async getUserTemplates(page:number=0,pageSize:number=10){
+  async getUserTemplates(app_id:string,users_id:string,page:number=0,pageSize:number=10){
     try{
       const skip = (page - 1) * pageSize;
-      const filter = { 
-        user_id: { $exists: true }
+      const filter: {
+        app_id: string;
+        user_id?: any; // Make 'user_id' property optional
+      } = {
+        app_id: app_id,
       };
+      
+      if (users_id != undefined && users_id != null && users_id !== '') {
+        filter.user_id = new Types.ObjectId(users_id);
+      } else {
+        filter.user_id = { $exists: true }; // Assigning the object directly
+      }      
       const result = await this.TemplateModel.find(filter).sort({ updatedAt: -1 }).skip(skip).limit(pageSize);
       const totalTemplates = await this.TemplateModel.countDocuments(filter);
       if(result){

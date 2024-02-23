@@ -345,7 +345,7 @@ export class TemplatesService {
     }
   }
 
-  async findToptemplates(app_id:string,page:number=0,pageSize:number=10){
+  async findToptemplates(app_id:string,tag :string,page:number=0,pageSize:number=10){
     try {
       const skip = (page - 1) * pageSize;
       // start of the current month
@@ -358,6 +358,19 @@ export class TemplatesService {
       endOfMonth.setMonth(endOfMonth.getMonth() + 1);
       endOfMonth.setDate(0);
       endOfMonth.setHours(23, 59, 59, 999);
+      const filter: {
+        is_approved: string;
+        is_active: string;
+        app_id: string;
+        tags?: string; // Make 'tags' property optional
+      } = {
+        is_approved: 'Approved',
+        is_active: '1',
+        app_id: app_id
+      };
+      if (tag !== '') {
+        filter.tags = tag;
+      }
       const totalTemplates = await this.TemplateModel.countDocuments({app_id:app_id});
       const result = await this.TemplateModel.aggregate([
         {
@@ -366,9 +379,7 @@ export class TemplatesService {
               $gte: startOfMonth,
               $lte: endOfMonth,
             },
-            is_approved: 'Approved',
-            is_active:'1',
-            app_id:app_id,
+           ...filter,
           },
         },
         {
@@ -401,13 +412,27 @@ export class TemplatesService {
     }
   }
 
-  async findTrendingtemplates(app_id:string,page:number=0, pageSize:number=10){
+  async findTrendingtemplates(app_id:string,tag :string,page:number=0, pageSize:number=10){
     try {
+      const filter: {
+        is_approved: string;
+        is_active: string;
+        app_id: string;
+        tags?: string; // Make 'tags' property optional
+      } = {
+        is_approved: 'Approved',
+        is_active: '1',
+        app_id: app_id
+      };
+      
+      if (tag !== '') {
+        filter.tags = tag;
+      }
       const skip = (page - 1) * pageSize;
-      const result = await this.TemplateModel.find({is_approved:'Approved',is_active:"1",app_id:app_id})
+      const result = await this.TemplateModel.find(filter)
       .sort({ used_count: -1 }).skip(skip)
       .limit(pageSize).select({ template_desc: 0 });
-      const totalTemplates = await this.TemplateModel.countDocuments({app_id:app_id});
+      const totalTemplates = await this.TemplateModel.countDocuments(filter);
       return {
         success:true,
         StatusCode:HttpStatus.OK,
@@ -420,13 +445,27 @@ export class TemplatesService {
      throw new InternalServerErrorException(error);
     }
   }
-  async findRecenttemplates(app_id:string,page:number=0, pageSize:number=10){
+  async findRecenttemplates(app_id:string,tag :string,page:number=0, pageSize:number=10){
     try {
       const skip = (page - 1) * pageSize;
-      const result = await this.TemplateModel.find({is_approved:'Approved', is_active:"1",app_id:app_id})
+      const filter: {
+        is_approved: string;
+        is_active: string;
+        app_id: string;
+        tags?: string; // Make 'tags' property optional
+      } = {
+        is_approved: 'Approved',
+        is_active: '1',
+        app_id: app_id
+      };
+      
+      if (tag !== '') {
+        filter.tags = tag;
+      }
+      const result = await this.TemplateModel.find(filter)
       .sort({ createdAt: -1 }).skip(skip)
       .limit(pageSize).select({ template_desc: 0 });
-      const totalTemplates = await this.TemplateModel.countDocuments({app_id:app_id});
+      const totalTemplates = await this.TemplateModel.countDocuments(filter);
       return {
         success:true,
         StatusCode:HttpStatus.OK,

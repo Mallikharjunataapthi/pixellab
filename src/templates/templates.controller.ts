@@ -58,13 +58,13 @@ export class TemplatesController {
   
   @Public()
   @Get('/toplist')
-  async getTopList(@Query('app_id') app_id: string,@Query('currentPage') currentPage: number, @Query('pageSize') pageSize: number,@Res() response:Response){
+  async getTopList(@Query('app_id') app_id: string,@Query('tag') tag: string='',@Query('currentPage') currentPage: number, @Query('pageSize') pageSize: number,@Res() response:Response){
     try {
       if(isNaN(currentPage) || isNaN(pageSize)){
         currentPage = 1;
         pageSize = 10;
       }
-      const data = await this.templatesService.findToptemplates(app_id,currentPage,pageSize);
+      const data = await this.templatesService.findToptemplates(app_id,tag,currentPage,pageSize);
       response.status(data.StatusCode).json(data);
     } catch (error) {
       throw new InternalServerErrorException(error);
@@ -73,13 +73,13 @@ export class TemplatesController {
 
   @Public()
   @Get('/trendinglist')
-  async getTrendingList(@Query('app_id') app_id: string,@Query('currentPage') currentPage: number, @Query('pageSize') pageSize: number,@Res() response:Response){
+  async getTrendingList(@Query('app_id') app_id: string,@Query('tag') tag: string='',@Query('currentPage') currentPage: number, @Query('pageSize') pageSize: number,@Res() response:Response){
     try {
       if(isNaN(currentPage) || isNaN(pageSize)){
         currentPage = 1;
         pageSize = 10;
       }
-      const data = await this.templatesService.findTrendingtemplates(app_id,currentPage,pageSize);
+      const data = await this.templatesService.findTrendingtemplates(app_id,tag,currentPage,pageSize);
       response.status(data.StatusCode).json(data);
     } catch (error) {
      throw new InternalServerErrorException(error);
@@ -88,13 +88,13 @@ export class TemplatesController {
 
   @Public()
   @Get('/recentlist')
-  async getRecentList(@Query('app_id') app_id: string,@Query('currentPage') currentPage: number, @Query('pageSize') pageSize: number,@Res() response:Response){
+  async getRecentList(@Query('app_id') app_id: string,@Query('tag') tag: string='' ,@Query('currentPage') currentPage: number, @Query('pageSize') pageSize: number,@Res() response:Response ){
     try {
       if(isNaN(currentPage) || isNaN(pageSize)){
         currentPage = 1;
         pageSize = 10;
       }
-      const data = await this.templatesService.findRecenttemplates(app_id,currentPage,pageSize);
+      const data = await this.templatesService.findRecenttemplates(app_id,tag,currentPage,pageSize);
       response.status(data.StatusCode).json(data);
     } catch (error) {
      throw new InternalServerErrorException(error);

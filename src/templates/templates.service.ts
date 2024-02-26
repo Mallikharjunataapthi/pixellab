@@ -324,7 +324,7 @@ export class TemplatesService {
       } else {
         filter.user_id = { $exists: true }; // Assigning the object directly
       }      
-      const result = await this.TemplateModel.find(filter).sort({ updatedAt: -1 }).skip(skip).limit(pageSize);
+      const result = await this.TemplateModel.find(filter).sort({ updatedAt: -1 }).skip(skip).limit(pageSize).populate('user_id', 'username');
       const totalTemplates = await this.TemplateModel.countDocuments(filter);
       if(result){
         return {

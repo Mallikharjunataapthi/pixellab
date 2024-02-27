@@ -1,5 +1,5 @@
 import { DeleteObjectCommand, PutObjectCommand,S3Client } from '@aws-sdk/client-s3';
-
+const { v4: uuidv4 } = require('uuid');
 export class FileUploadMiddleware {
   private s3: S3Client;
   constructor() {
@@ -59,8 +59,12 @@ export class FileUploadMiddleware {
   }
   
 
-  RenameFile(filename:string){
-    const newFilename = `${Date.now().toString()}_${filename}`
-    return newFilename;
-  }
+
+   RenameFile(filename:string) {
+    const timestamp = new Date().getTime();
+    const randomString = uuidv4(); // Generate a random string using UUID
+    const extension = filename.split('.').pop(); // Get the file extension
+    const fileName = `${timestamp}_${randomString}.${extension}`;
+    return fileName;
+}
 }

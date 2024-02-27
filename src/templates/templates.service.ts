@@ -28,6 +28,7 @@ export class TemplatesService {
 
       createTemplateDto.cat_id = new Types.ObjectId(createTemplateDto.cat_id);
       createTemplateDto.app_id = new Types.ObjectId(createTemplateDto.app_id);
+      createTemplateDto.user_id = new Types.ObjectId(createTemplateDto.user_id);
       
       const categoryName = await this.CategoryModel.findById(createTemplateDto.cat_id);
 
@@ -151,6 +152,7 @@ export class TemplatesService {
     try{
        updateTemplateDto.cat_id = new Types.ObjectId(updateTemplateDto.cat_id);
        const categoryName = await this.CategoryModel.findById(updateTemplateDto.cat_id);
+
        const updateObject: any = {
         app_id:new Types.ObjectId(updateTemplateDto.app_id),
         cat_id: new Types.ObjectId(updateTemplateDto.cat_id),
@@ -392,6 +394,14 @@ export class TemplatesService {
           },
         },
         {
+          $lookup: {
+            from: 'UsersModule', // assuming userModel is the name of your user model
+            localField: 'user_id',
+            foreignField: '_id',
+            as: 'user',
+          },
+        },
+        {
           $sort: { used_count: -1 },
         },
         {
@@ -402,7 +412,8 @@ export class TemplatesService {
         },
         {
           $project: {
-            template_desc:0
+            template_desc:0,
+            user: { username: 1 },
           }
         }
       ]);
@@ -439,7 +450,7 @@ export class TemplatesService {
       }
       const skip = (page - 1) * pageSize;
       const result = await this.TemplateModel.find(filter)
-      .sort({ used_count: -1 }).skip(skip)
+      .sort({ used_count: -1 }).skip(skip).populate('user_id', 'username')
       .limit(pageSize).select({ template_desc: 0 });
       const totalTemplates = await this.TemplateModel.countDocuments(filter);
       return {
@@ -460,20 +471,20 @@ export class TemplatesService {
       const filter: {
         is_approved: string;
         is_active: string;
-        app_id: string;
+        app_id: Types.ObjectId;
         tags?: string; // Make 'tags' property optional
       } = {
         is_approved: 'Approved',
         is_active: '1',
-        app_id: app_id
+        app_id: new Types.ObjectId(app_id),
       };
       
       if (tag !== '') {
         filter.tags = tag;
       }
       const result = await this.TemplateModel.find(filter)
-      .sort({ createdAt: -1 }).skip(skip)
-      .limit(pageSize).select({ template_desc: 0 });
+      .sort({ createdAt: -1 })
+      .limit(pageSize).skip(skip).populate('user_id', 'username').select({ template_desc: 0 });
       const totalTemplates = await this.TemplateModel.countDocuments(filter);
       return {
         success:true,

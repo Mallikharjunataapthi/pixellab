@@ -22,7 +22,6 @@ export class UpdateTemplateDto extends PartialType(CreateTemplateDto) {
       before_image_url:String;
       @IsOptional()
       after_image_url:String;
-      @IsNotEmpty({ message: 'Template type required' })
       @IsNotEmpty({ message: 'Tags required' })
       tags:Types.Array<string>;
       feedType:FeedType;
@@ -30,4 +29,6 @@ export class UpdateTemplateDto extends PartialType(CreateTemplateDto) {
       @IsNotEmpty({ message: 'Template Status is required' })
       is_active:String;
       template_desc:String;
+      @IsNotEmpty({ message: 'User is required' })
+      user_id:Types.ObjectId;
 }

@@ -27,7 +27,7 @@ export class CreateTemplateDto {
      before_image_url:String;
     // @IsNotEmpty({ message: 'Modified image is required' })
      after_image_url:String;
-      @IsNotEmpty({ message: 'Template type required' })
+      @IsNotEmpty({ message: 'Is Free type required' })
       is_free:String;
       @IsNotEmpty({ message: 'Tags required' })
        @ApiProperty({ type: [String] })
@@ -36,7 +36,9 @@ export class CreateTemplateDto {
       tags: string[];
       feedType:FeedType;
       template_desc:String;
-      @IsNotEmpty({ message: 'Template Status is required' })
+      @IsNotEmpty({ message: 'Template Description is required' })
       is_active:String;
+      @IsNotEmpty({ message: 'User is required' })
+      user_id:Types.ObjectId;
 }
 

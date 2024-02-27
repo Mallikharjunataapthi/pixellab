@@ -359,77 +359,53 @@ export class TemplatesService {
   async findToptemplates(app_id:string,tag :string,page:number=0,pageSize:number=10){
     try {
       const skip = (page - 1) * pageSize;
-      // start of the current month
-      const startOfMonth = new Date(); 
+      const startOfMonth = new Date();
       startOfMonth.setDate(1);
       startOfMonth.setHours(0, 0, 0, 0);
 
-       // end of the current month
       const endOfMonth = new Date();
       endOfMonth.setMonth(endOfMonth.getMonth() + 1);
       endOfMonth.setDate(0);
       endOfMonth.setHours(23, 59, 59, 999);
-      const filter: {
-        is_approved: string;
-        is_active: string;
-        app_id: Types.ObjectId;
-        tags?: string; // Make 'tags' property optional
-      } = {
+
+      const filter = {
         is_approved: 'Approved',
         is_active: '1',
-        app_id: new Types.ObjectId(app_id)
-      };
-      if (tag !== '') {
-        filter.tags = tag;
-      }
-      const totalTemplates = await this.TemplateModel.countDocuments({app_id:app_id});
-      const result = await this.TemplateModel.aggregate([
-        {
-          $match: {
-            createdAt: {
-              $gte: startOfMonth,
-              $lte: endOfMonth,
-            },
-           ...filter,
-          },
-        },
-        {
-          $lookup: {
-            from: 'User', // assuming userModel is the name of your user model
-            localField: 'user_id',
-            foreignField: '_id',
-            as: 'user',
-          },
-        },
-        {
-          $sort: { used_count: -1 },
-        },
-        {
-          $skip:skip
-        },
-        {
-          $limit: pageSize,
-        },
-        {
-          $project: {
-            template_desc:0,
-            user: { username: 1 },
-          }
+        app_id: new Types.ObjectId(app_id),
+        createdAt: {
+          $gte: startOfMonth,
+          $lte: endOfMonth,
         }
-      ]);
-
-      return{
-        success:true,
-          StatusCode:HttpStatus.OK,
-          data:{
-            result,
-            currentPage: page,
-            totalPages: Math.ceil(totalTemplates / pageSize),
-            pageSize}
+      };
+      
+      if (tag !== '') {
+        filter['tags'] = tag;
       }
+
+      const totalTemplates = await this.TemplateModel.countDocuments(filter);
+
+      const result = await this.TemplateModel
+        .find(filter)
+        .sort({ used_count: -1 })
+        .skip(skip)
+        .limit(pageSize)
+        .populate('user_id', 'username') 
+        .select('-template_desc')
+
+      return {
+        success: true,
+        StatusCode: HttpStatus.OK,
+        data: {
+          result,
+          currentPage: page,
+          totalPages: Math.ceil(totalTemplates / pageSize),
+          pageSize
+        }
+      };
     } catch (error) {
       throw new InternalServerErrorException(error);
     }
+  
   }
 
   async findTrendingtemplates(app_id:string,tag :string,page:number=0, pageSize:number=10){

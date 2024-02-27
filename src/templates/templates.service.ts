@@ -372,12 +372,12 @@ export class TemplatesService {
       const filter: {
         is_approved: string;
         is_active: string;
-        app_id: string;
+        app_id: Types.ObjectId;
         tags?: string; // Make 'tags' property optional
       } = {
         is_approved: 'Approved',
         is_active: '1',
-        app_id: app_id
+        app_id: new Types.ObjectId(app_id)
       };
       if (tag !== '') {
         filter.tags = tag;
@@ -437,12 +437,12 @@ export class TemplatesService {
       const filter: {
         is_approved: string;
         is_active: string;
-        app_id: string;
+        app_id: Types.ObjectId;
         tags?: string; // Make 'tags' property optional
       } = {
         is_approved: 'Approved',
         is_active: '1',
-        app_id: app_id
+        app_id: new Types.ObjectId(app_id)
       };
       
       if (tag !== '') {

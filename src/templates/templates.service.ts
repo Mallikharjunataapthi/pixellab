@@ -395,7 +395,7 @@ export class TemplatesService {
         },
         {
           $lookup: {
-            from: 'UsersModule', // assuming userModel is the name of your user model
+            from: 'User', // assuming userModel is the name of your user model
             localField: 'user_id',
             foreignField: '_id',
             as: 'user',

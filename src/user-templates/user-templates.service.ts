@@ -64,6 +64,7 @@ export class UserTemplatesService {
             template_id: new Types.ObjectId(createUserTemplateDto.user_temp_template_id),
             before_image_url:beforeImageS3Response ?beforeImageS3Response : null,
             after_image_url:afterImageS3Response ? afterImageS3Response : null,
+            template_name: templateData.data.template_name,
             cat_id:templateData.data.cat_id,
             category_name:templateData.data.category_name,
             whishlist_count:0,

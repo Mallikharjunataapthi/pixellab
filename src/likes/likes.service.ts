@@ -2,7 +2,7 @@ import { HttpStatus, Injectable, InternalServerErrorException } from '@nestjs/co
 import { CreateLikeDto } from './dto/create-like.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Likes } from './Schemas/likes.schemas';
-import { Model } from 'mongoose';
+import { Model, ObjectId, Types  } from 'mongoose';
 import { Template } from 'src/templates/Schema/template.schema';
 import { User } from 'src/users/Schemas/users.schema';
 @Injectable()
@@ -15,7 +15,7 @@ export class LikesService {
   
   async checkUserLike(createLikeDto: CreateLikeDto) {
     try{
-      const returndata = await this.LikesModel.findOne({user_id:createLikeDto.user_id, template_id:createLikeDto.template_id});
+      const returndata = await this.LikesModel.findOne({user_id:new Types.ObjectId(createLikeDto.user_id), template_id:new Types.ObjectId(createLikeDto.template_id)});
       return {
         success:true,
         message:returndata
@@ -57,8 +57,10 @@ export class LikesService {
   }
  async create(createLikeDto: CreateLikeDto) {
     try{
-      await  this.LikesModel.create(createLikeDto);
-      await this.updateLikesCount(createLikeDto, +1);
+     
+      const createLike = {...createLikeDto,app_id: new Types.ObjectId(createLikeDto.app_id), user_id: new Types.ObjectId(createLikeDto.user_id) ,template_id: new Types.ObjectId(createLikeDto.template_id)}
+      await  this.LikesModel.create(createLike);
+      await this.updateLikesCount(createLike, +1);
       return { 
         success:true,
         StatusCode:HttpStatus.OK,
@@ -71,8 +73,9 @@ export class LikesService {
 
   async remove(createLikeDto:CreateLikeDto) {
     try{
-      await  this.LikesModel.findOneAndDelete(createLikeDto);
-      this.updateLikesCount(createLikeDto,-1);
+      const createLike = {...createLikeDto,app_id: new Types.ObjectId(createLikeDto.app_id), user_id: new Types.ObjectId(createLikeDto.user_id) ,template_id: new Types.ObjectId(createLikeDto.template_id)}
+      await  this.LikesModel.findOneAndDelete(createLike);
+      this.updateLikesCount(createLike,-1);
       return {
         success:true,
         StatusCode:HttpStatus.OK,

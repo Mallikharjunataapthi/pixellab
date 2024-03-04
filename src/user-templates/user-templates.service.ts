@@ -62,6 +62,7 @@ export class UserTemplatesService {
             app_name:AppName.app_name,
             user_id: new Types.ObjectId(createUserTemplateDto.user_temp_user_id),
             template_id: new Types.ObjectId(createUserTemplateDto.user_temp_template_id),
+            original_template_id: new Types.ObjectId(createUserTemplateDto.user_temp_original_template_id),
             before_image_url:beforeImageS3Response ?beforeImageS3Response : null,
             after_image_url:afterImageS3Response ? afterImageS3Response : null,
             template_name: templateData.data.template_name,
@@ -112,7 +113,14 @@ export class UserTemplatesService {
       throw new InternalServerErrorException(error);
     }
   }
-
+  findAllChildTemplate(app_id:string,template_id:string,currentPage:number=0,pageSize:number=10) {
+    try {
+      const data = this.templatesService.getChildTemplate(app_id,template_id,currentPage,pageSize);
+      return data;
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
+  }
   findOne(id: number) {
     return `This action returns a #${id} userTemplate`;
   }

@@ -2,10 +2,11 @@ import { Controller, Post, Body, HttpStatus, Res, UseGuards, InternalServerError
 import { LikesService } from './likes.service';
 import { CreateLikeDto } from './dto/create-like.dto';
 import { Response } from 'express';
+import { Public } from 'src/common/public.middleware';
 @Controller('likes')
 export class LikesController {
   constructor(private readonly likesService: LikesService) {}
-
+@Public()
   @Post()
   async create(@Body() createLikeDto: CreateLikeDto,@Res() response: Response) {
     // check already liked

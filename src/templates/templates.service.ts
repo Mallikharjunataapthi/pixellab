@@ -355,7 +355,46 @@ export class TemplatesService {
       }
     }
   }
-
+  async getChildTemplate(app_id:string,template_id:string,page:number=0,pageSize:number=10){
+    try{
+      const skip = (page - 1) * pageSize;
+      const filter: {
+        app_id: any;
+        original_template_id: any; // Make 'original_template_id' property optional
+      } = {
+        app_id: new Types.ObjectId(app_id),
+        original_template_id: new Types.ObjectId(template_id),
+      };
+    
+      const result = await this.TemplateModel.find(filter).sort({ updatedAt: -1 }).skip(skip).limit(pageSize).populate('user_id', 'username');
+      const totalTemplates = await this.TemplateModel.countDocuments(filter);
+      if(result){
+        return {
+          success:true,
+          StatusCode:HttpStatus.OK,
+          data:{result,
+            currentPage: page,
+            totalPages: Math.ceil(totalTemplates / pageSize),
+            pageSize}
+        }
+      }else{
+        return {
+          success:true,
+          StatusCode:HttpStatus.NOT_FOUND,
+          data:{result,
+            currentPage: page,
+            totalPages: Math.ceil(totalTemplates / pageSize),
+            pageSize}
+        }
+      }
+    }catch(error){
+      return {
+        success:true,
+        StatusCode:HttpStatus.NOT_FOUND,
+        message:'Failed to retrieve Template '
+      }
+    }
+  }
   async findToptemplates(app_id:string,tag :string,page:number=0,pageSize:number=10){
     try {
       const skip = (page - 1) * pageSize;

@@ -6,4 +6,6 @@ export class CreateLikeDto {
     user_id:Types.ObjectId;
     @IsNotEmpty()
     template_id:Types.ObjectId
+    @IsNotEmpty()
+    app_id:Types.ObjectId
 }

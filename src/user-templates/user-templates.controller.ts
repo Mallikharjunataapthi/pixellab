@@ -40,7 +40,21 @@ export class UserTemplatesController {
     }
     
   }
-
+  @Public()
+  @Get('/childtemplates')
+  async findAllChildTemplate(@Query('currentPage') currentPage: number,@Query('app_id') app_id: string,@Query('template_id') template_id, @Query('pageSize') pageSize: number, @Res() res:Response) {
+    try{
+      if(isNaN(currentPage) || isNaN(pageSize)){
+        currentPage = 1;
+        pageSize = 10;
+      }
+      const data = await this.userTemplatesService.findAllChildTemplate(app_id,template_id,currentPage,pageSize);
+      res.status(data.StatusCode).json(data);
+    }catch(error){
+      throw new InternalServerErrorException(error);
+    }
+    
+  }
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.userTemplatesService.findOne(+id);

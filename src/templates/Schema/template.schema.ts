@@ -65,6 +65,10 @@ export class Template{
   is_approved:string;
   @Prop({ type:String })
   template_desc:string;
+  @Prop({
+    type:Types.ObjectId, ref:'Template'
+  })
+  original_template_id:Types.ObjectId
 }
 export type TemplateDocument = Template & Document;
 
@@ -92,7 +96,7 @@ TemplateSchema.pre('updateOne', async function (next) {
 
   const template_name = update?.template_name;
   const app_id = update?.app_id;
-  const cat_id = update?.cat_id.toString();
+  const cat_id = update?.cat_id != undefined ? update?.cat_id.toString() :null;
   const TemplateModel = this.model as Model<TemplateDocument>;
   const existingTemplate = await TemplateModel.findOne({
       app_id: app_id,

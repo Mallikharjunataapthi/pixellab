@@ -7,10 +7,12 @@ import { Types } from 'mongoose';
   timestamps: true,
 })
 export class Likes {
-  @Prop({ type:Types.ObjectId, required:true})
+  @Prop({ required:true})
   user_id : Types.ObjectId;
-  @Prop({ type:Types.ObjectId, required:true})
+  @Prop({required:true})
   template_id : Types.ObjectId;
+  @Prop({required:true})
+  app_id : Types.ObjectId;
 }
 
 export const LikesSchema = SchemaFactory.createForClass(Likes);

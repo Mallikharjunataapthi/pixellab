@@ -361,9 +361,13 @@ export class TemplatesService {
       const filter: {
         app_id: any;
         original_template_id: any; // Make 'original_template_id' property optional
+        is_approved: string;
+        is_active: any;
       } = {
         app_id: new Types.ObjectId(app_id),
         original_template_id: new Types.ObjectId(template_id),
+        is_approved: 'Approved',
+        is_active: '1',
       };
     
       const result = await this.TemplateModel.find(filter).sort({ updatedAt: -1 }).skip(skip).limit(pageSize).populate('user_id', 'username');

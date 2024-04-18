@@ -164,6 +164,9 @@ export class TemplatesService {
         feedType:updateTemplateDto.feedType,
         template_desc:updateTemplateDto.template_desc,
       }; 
+      if(updateTemplateDto.base_image_path !=undefined && updateTemplateDto.base_image_path != null){
+        updateObject.base_image_path = updateTemplateDto.base_image_path;
+      }
       updateObject.category_name = categoryName.cat_name;
       if(beforeImageS3URL){
         updateObject.before_image_url = beforeImageS3URL;

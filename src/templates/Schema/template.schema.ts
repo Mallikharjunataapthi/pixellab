@@ -65,6 +65,8 @@ export class Template{
   is_approved:string;
   @Prop({ type:String })
   template_desc:string;
+  @Prop({ type:String })
+  base_image_path:string;
   @Prop({
     type:Types.ObjectId, ref:'Template'
   })

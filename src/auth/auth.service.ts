@@ -3,19 +3,43 @@ import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import * as bcrypt from "bcrypt"
 import { UsersService } from 'src/users/users.service';
+import { Model, Types } from 'mongoose';
+import { Apps } from 'src/apps/schema/apps.schema';
+import { InjectModel } from '@nestjs/mongoose';
 @Injectable()
 export class AuthService {
     constructor(
+      @InjectModel(Apps.name) private AppsModel: Model<Apps>,
         private usersService: UsersService,
-        private jwtService: JwtService
+        private jwtService: JwtService,
       ){}
     async create(createUserDto: CreateUserDto) {
       try{
         const {password, ...Userdata} = createUserDto;
         const hasedpassword = await bcrypt.hash(password,10);
-        const createUser = { ...Userdata,password:hasedpassword,role_id:0 }
+        let createUser;
+        if(createUserDto.app_id != undefined && createUserDto.app_id != null){
 
-        await this.usersService.create(createUser);
+        }
+        if( createUserDto?.app_id.length == 24 ){
+            const appid = createUserDto.app_id;
+            const AppName = await this.AppsModel.findById(appid);
+            if (AppName != undefined && AppName != null && AppName.app_name != undefined && AppName.app_name != null) {
+              createUser = { ...Userdata,password:hasedpassword,role_id:2,app_name:AppName.app_name }
+              await this.usersService.create(createUser);
+            }else{
+              return {
+                success: false,
+                StatusCode:HttpStatus.BAD_REQUEST,
+                message: 'App Name not exists',
+              };
+            }
+          }else {
+            createUser = { ...Userdata,password:hasedpassword,role_id:0 }
+            await this.usersService.create(createUser);
+          }
+
+        
         return {
           success: true,
           StatusCode:HttpStatus.OK,

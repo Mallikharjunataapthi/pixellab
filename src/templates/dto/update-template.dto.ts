@@ -31,4 +31,5 @@ export class UpdateTemplateDto extends PartialType(CreateTemplateDto) {
       template_desc:String;
       @IsNotEmpty({ message: 'User is required' })
       user_id:Types.ObjectId;
+      base_image_path:string;
 }

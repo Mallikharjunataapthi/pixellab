@@ -56,6 +56,7 @@ export class UserTemplatesService {
           }catch(error){
           throw new InternalServerErrorException(error);
           }
+          
           const timestamp = new Date().getTime();
           const UsertempalteObject = {
             app_id: new Types.ObjectId(createUserTemplateDto.user_temp_app_id),
@@ -78,7 +79,12 @@ export class UserTemplatesService {
             template_desc:templateData.data.template_desc,
             is_approved:'Pending',
           }
-          await this. templatesService.createUserTemplate(UsertempalteObject);
+          if(createUserTemplateDto.base_image_path != undefined && createUserTemplateDto.base_image_path != null && createUserTemplateDto.base_image_path != ''){
+            const newUsertempalteObject = {...UsertempalteObject,base_image_path:createUserTemplateDto.base_image_path};
+            await this. templatesService.createUserTemplate(newUsertempalteObject);
+          }else{
+              await this. templatesService.createUserTemplate(UsertempalteObject);
+          }
           return{
             success:true,
             StatusCode:HttpStatus.CREATED,

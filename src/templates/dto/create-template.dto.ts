@@ -40,5 +40,6 @@ export class CreateTemplateDto {
       is_active:String;
       @IsNotEmpty({ message: 'User is required' })
       user_id:Types.ObjectId;
+      base_image_path:string;
 }
 

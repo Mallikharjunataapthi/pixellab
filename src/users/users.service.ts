@@ -88,7 +88,7 @@ export class UsersService {
   async getAllAdminUsers(appId:string ,page:number=0,pageSize:number=10) {
     try{
       const skip = (page - 1) * pageSize;
-      const data = await this.UserModel.find({app_id:appId}).sort({updatedAt:-1});
+      const data = await this.UserModel.find({app_id:appId,role_id:2}).sort({updatedAt:-1});
       const totalUsers = await this.UserModel.countDocuments({app_id:appId});
       return{
         success: true,

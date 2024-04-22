@@ -11,9 +11,9 @@ export class CreateUserTemplateDto {
     @IsNotEmpty({ message: 'User Id is required' })
     user_temp_user_id:Types.ObjectId;
     @ApiProperty({ type: Types.ObjectId })
-    @IsNotEmpty({ message: 'Template Id is required' })
+   // @IsNotEmpty({ message: 'Template Id is required' })
     user_temp_template_id:Types.ObjectId;
-    @IsNotEmpty({ message: 'Original Template Id is required' })
+    // @IsNotEmpty({ message: 'Original Template Id is required' })
     user_temp_original_template_id:Types.ObjectId;
     // @IsNotEmpty({ message: 'Before Imag Id is required' })
     user_temp_before_image_url:string;

@@ -10,6 +10,8 @@ export class Apps {
   app_name:String
   @Prop({ type:String,default: '1'})
   is_exist:string;
+  @Prop({ type:String,default: '0'})
+  is_auto:string;
 }
 
 export const AppsSchema = SchemaFactory.createForClass(Apps);

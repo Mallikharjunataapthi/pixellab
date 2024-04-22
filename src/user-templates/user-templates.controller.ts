@@ -64,9 +64,14 @@ export class UserTemplatesController {
   update(@Param('id') id: string, @Body() updateUserTemplateDto: UpdateUserTemplateDto) {
     return this.userTemplatesService.update(+id, updateUserTemplateDto);
   }
-
+  @Public()
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.userTemplatesService.remove(+id);
+  async remove(@Param('id') id: string,@Query('app_id') app_id: string, @Res() response:Response) {
+    try{
+      const result =  await this.userTemplatesService.remove(id,app_id);
+      response.status(result.StatusCode).json(result)
+    }catch(error){
+      throw new InternalServerErrorException(error);
+    }
   }
 }

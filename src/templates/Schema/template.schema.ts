@@ -57,7 +57,7 @@ export class Template{
   is_free: CategoryType;
   @Prop({ type:String, enum:FeedType,default:'Top'  })
   feedType:string;
-  @Prop({ type: Types.Array<string>, required: true })
+  //@Prop({ type: Types.Array<string>, required: true })
   tags: string[];
   @Prop({ required: true, enum: ['1', '0'], default: '1' })
   is_active:String;

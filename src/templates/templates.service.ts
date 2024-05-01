@@ -160,10 +160,13 @@ export class TemplatesService {
         is_active: updateTemplateDto.is_active,
         is_free: updateTemplateDto.is_free,
         category_name : categoryName.cat_name,
-        tags:updateTemplateDto.tags,
+        tags: updateTemplateDto.tags,
         feedType:updateTemplateDto.feedType,
         template_desc:updateTemplateDto.template_desc,
       }; 
+      if(updateTemplateDto.purchase_url !=undefined && updateTemplateDto.purchase_url != null){
+        updateObject.purchase_url = updateTemplateDto.purchase_url;
+      }
       if(updateTemplateDto.base_image_path !=undefined && updateTemplateDto.base_image_path != null){
         updateObject.base_image_path = updateTemplateDto.base_image_path;
       }

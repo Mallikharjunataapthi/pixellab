@@ -7,11 +7,20 @@ import { Types } from 'mongoose';
   timestamps: true,
 })
 export class Likes {
-  @Prop({ required:true})
+  @Prop({
+    type:Types.ObjectId, ref:'User',
+    required:true
+  })
   user_id : Types.ObjectId;
-  @Prop({required:true})
+  @Prop({
+    type:Types.ObjectId, ref:'Template',
+    required:true
+  })
   template_id : Types.ObjectId;
-  @Prop({required:true})
+  @Prop({
+    type:Types.ObjectId, ref:'Apps',
+    required:true
+  })
   app_id : Types.ObjectId;
 }
 

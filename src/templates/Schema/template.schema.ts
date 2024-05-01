@@ -57,7 +57,7 @@ export class Template{
   is_free: CategoryType;
   @Prop({ type:String, enum:FeedType,default:'Top'  })
   feedType:string;
-  //@Prop({ type: Types.Array<string>, required: true })
+  @Prop({ type: Types.Array<string>, required: false })
   tags: string[];
   @Prop({ required: true, enum: ['1', '0'], default: '1' })
   is_active:String;
@@ -71,6 +71,9 @@ export class Template{
     type:Types.ObjectId, ref:'Template'
   })
   original_template_id:Types.ObjectId
+  @Prop({ type:String })
+  purchase_url:string;
+  
 }
 export type TemplateDocument = Template & Document;
 

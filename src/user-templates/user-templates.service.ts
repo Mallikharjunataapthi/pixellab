@@ -94,7 +94,10 @@ export class UserTemplatesService {
               is_approved: AppName.is_auto == '1' ? 'Approved': 'Pending',
             }
           }
-        
+          
+          if(createUserTemplateDto.purchase_url != undefined && createUserTemplateDto.purchase_url != null && createUserTemplateDto.base_image_path != ''){
+             UsertempalteObject = {...UsertempalteObject,purchase_url:createUserTemplateDto.purchase_url};  
+          }
           if(createUserTemplateDto.base_image_path != undefined && createUserTemplateDto.base_image_path != null && createUserTemplateDto.base_image_path != ''){
             const newUsertempalteObject = {...UsertempalteObject,base_image_path:createUserTemplateDto.base_image_path};
             await this. templatesService.createUserTemplate(newUsertempalteObject);

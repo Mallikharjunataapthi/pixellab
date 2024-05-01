@@ -55,6 +55,7 @@ export class UserTemplate {
       app_name:string;
       @Prop({ type:String })
       base_image_path:string;
+      purchase_url:string;
 }
 
 export const UserTemplateSchema = SchemaFactory.createForClass(UserTemplate);

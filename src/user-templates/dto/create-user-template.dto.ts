@@ -20,4 +20,6 @@ export class CreateUserTemplateDto {
     // @IsNotEmpty({ message: 'After image Id is required' })
     user_temp_after_image_url:string;
     base_image_path:string;
+    purchase_url:string;
+    
 }

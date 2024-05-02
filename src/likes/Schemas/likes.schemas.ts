@@ -1,8 +1,7 @@
 
 
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Types } from 'mongoose';
-
+import { Types} from 'mongoose';
 @Schema({
   timestamps: true,
 })
@@ -23,9 +22,8 @@ export class Likes {
   })
   app_id : Types.ObjectId;
 }
-
-export const LikesSchema = SchemaFactory.createForClass(Likes);
-
+export type LikesDocument = Likes & Document;
+  export const LikesSchema = SchemaFactory.createForClass(Likes);
 // LikesSchema.post('save', async (savedata,next) => {
 //     // Update related templates
 //     const TemplateModel = model<Template>('Template');

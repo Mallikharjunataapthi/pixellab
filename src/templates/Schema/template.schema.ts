@@ -118,3 +118,9 @@ TemplateSchema.pre('updateOne', async function (next) {
       next();
   }
 });
+TemplateSchema.virtual('likedBy', {
+  ref: 'Likes',
+  localField: '_id',
+  foreignField: 'template_id',
+  justOne: false,
+});

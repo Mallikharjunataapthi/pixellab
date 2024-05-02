@@ -332,7 +332,11 @@ export class TemplatesService {
       } else {
         filter.user_id = { $exists: true }; // Assigning the object directly
       }      
-      const result = await this.TemplateModel.find(filter).sort({ updatedAt: -1 }).skip(skip).limit(pageSize).populate('user_id', 'username');
+      const result = await this.TemplateModel.find(filter).sort({ updatedAt: -1 }).skip(skip).limit(pageSize).populate('user_id', 'username').populate({
+        path: 'likedBy',
+        match: { user_id: new Types.ObjectId(users_id) },
+        select: 'user_id',
+      }).lean();
       const totalTemplates = await this.TemplateModel.countDocuments(filter);
       if(result){
         return {
@@ -405,7 +409,7 @@ export class TemplatesService {
       }
     }
   }
-  async findToptemplates(app_id:string,tag :string,page:number=0,pageSize:number=10){
+  async findToptemplates(app_id:string,tag :string,page:number=0,pageSize:number=10, user_ids:string){
     try {
       const skip = (page - 1) * pageSize;
       const startOfMonth = new Date();
@@ -439,7 +443,11 @@ export class TemplatesService {
         .skip(skip)
         .limit(pageSize)
         .populate('user_id', 'username') 
-        .select('-template_desc')
+        .select('-template_desc').populate({
+          path: 'likedBy',
+          match: { user_id: user_ids != '0' ?new Types.ObjectId(user_ids) : user_ids},
+          select: 'user_id',
+        }).lean();
 
       return {
         success: true,
@@ -457,7 +465,7 @@ export class TemplatesService {
   
   }
 
-  async findTrendingtemplates(app_id:string,tag :string,page:number=0, pageSize:number=10){
+  async findTrendingtemplates(app_id:string,tag :string,page:number=0, pageSize:number=10, user_ids:string){
     try {
       const filter: {
         is_approved: string;
@@ -476,7 +484,11 @@ export class TemplatesService {
       const skip = (page - 1) * pageSize;
       const result = await this.TemplateModel.find(filter)
       .sort({ used_count: -1 }).skip(skip).populate('user_id', 'username')
-      .limit(pageSize).select({ template_desc: 0 });
+      .limit(pageSize).select({ template_desc: 0 }).populate({
+        path: 'likedBy',
+        match: { user_id: user_ids != '0' ?new Types.ObjectId(user_ids) : user_ids},
+        select: 'user_id',
+      }).lean();
       const totalTemplates = await this.TemplateModel.countDocuments(filter);
       return {
         success:true,
@@ -490,7 +502,7 @@ export class TemplatesService {
      throw new InternalServerErrorException(error);
     }
   }
-  async findRecenttemplates(app_id:string,tag :string,page:number=0, pageSize:number=10){
+  async findRecenttemplates(app_id:string,tag :string,page:number=0, pageSize:number=10, user_ids:string){
     try {
       const skip = (page - 1) * pageSize;
       const filter: {
@@ -509,7 +521,11 @@ export class TemplatesService {
       }
       const result = await this.TemplateModel.find(filter)
       .sort({ createdAt: -1 })
-      .limit(pageSize).skip(skip).populate('user_id', 'username').select({ template_desc: 0 });
+      .limit(pageSize).skip(skip).populate('user_id', 'username').select({ template_desc: 0 }).populate({
+        path: 'likedBy',
+        match: { user_id: user_ids != '0' ?new Types.ObjectId(user_ids) : user_ids},
+        select: 'user_id',
+      }).lean();
       const totalTemplates = await this.TemplateModel.countDocuments(filter);
       return {
         success:true,

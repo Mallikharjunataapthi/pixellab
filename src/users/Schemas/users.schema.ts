@@ -32,7 +32,10 @@ UserSchema.pre('save', async function (next) {
   const UserModel = this.constructor as Model<UserDocument>;
   let existingUser=null;
   if ( this.app_id != undefined && this.app_id != null){
-  
+    existingUser = await UserModel.findOne({
+      email: this.email,
+      app_id: this.app_id,
+    });
   } else {
      existingUser = await UserModel.findOne({
       username: this.username,

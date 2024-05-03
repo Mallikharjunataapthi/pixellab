@@ -10,6 +10,6 @@ export class CreateAppUserDto {
     @IsString()
     readonly email:string;
     @IsString()
-    readonly profile_img:string;
+    readonly profile_img?:string;
 
 }

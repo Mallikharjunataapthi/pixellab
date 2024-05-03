@@ -3,6 +3,7 @@ import { HttpStatus, Injectable, InternalServerErrorException } from '@nestjs/co
 import { InjectModel } from '@nestjs/mongoose';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './Schemas/users.schema';
+import { UpdateUserDto } from 'src/auth/dto/update-user.dto';
 @Injectable()
 export class UsersService {
   constructor(
@@ -46,7 +47,7 @@ export class UsersService {
   async findAll(page:number=0,pageSize:number=10) {
     try{
       const skip = (page - 1) * pageSize;
-      const data = await this.UserModel.find().sort({updatedAt:-1}).skip(skip).limit(pageSize);
+      const data = await this.UserModel.find().sort({updatedAt:-1}).skip(skip).limit(pageSize).populate('app_id','app_name');
       const totalUsers = await this.UserModel.countDocuments();
       return{
         success: true,
@@ -102,5 +103,31 @@ export class UsersService {
     catch(error){
       throw new InternalServerErrorException(error);
     }
+  }
+
+  async update(id: string,updateUserDto: UpdateUserDto) {
+    if(updateUserDto.role_id !== '0') {
+      const existingUser = await this.UserModel.findOne({
+          app_id: updateUserDto.app_id,
+          email: updateUserDto.email,
+          _id: { $ne: id },
+      });
+      if(existingUser){
+        return 'User Already Exists' ;
+      }
+      
+    } else {
+      const existingUser = await this.UserModel.findOne({
+        username:updateUserDto.username,
+        _id: { $ne: new Types.ObjectId(id)},
+        app_id: { $exists: false },
+      });
+      
+      if(existingUser){
+        return 'User Already Exists';
+      }
+    }
+    const data = await this.UserModel.updateOne({_id:id},updateUserDto);
+    return data;
   }
 }

@@ -21,17 +21,34 @@ export class AppUserService {
         const AppName = await this.AppsModel.findById(appid);
         if (AppName != undefined && AppName != null && AppName.app_name != undefined && AppName.app_name != null) {
           const createUser = {...createAppUserDto ,app_name:AppName.app_name}
-        const  existingUserDetails = await this.UserModel.findOne({
+          const  existingUserDetails = await this.UserModel.findOne({
             app_id: createAppUserDto.app_id,
             email: createAppUserDto.email,
           });
           if(existingUserDetails != undefined && existingUserDetails !=null){
+            if(existingUserDetails.is_active == "0"){
+              return {
+                success: true,
+                StatusCode:HttpStatus.OK,
+                message: 'User Blocked. Please Contact Administrator',
+                userId: existingUserDetails._id,
+              };
+            }
+            const  existingUserupdate = await this.UserModel.updateOne({_id:new Types.ObjectId(existingUserDetails.id)},{
+              app_id:createUser.app_id,
+              app_name:createUser.app_name,
+              email:createUser.email,
+              profile_img:createUser.profile_img,
+              username:createUser.username,
+              });
+              existingUserupdate;
             return {
               success: true,
               StatusCode:HttpStatus.OK,
-              message: 'User found',
+              message: 'User Exists',
               userId: existingUserDetails._id,
             };
+
           } else {
             const createdUserId = await this.UserModel.create(createUser);
             return {

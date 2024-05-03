@@ -1,7 +1,8 @@
-import { Controller, Get, Query, InternalServerErrorException,Res } from '@nestjs/common';
+import { Controller, Get, Query, InternalServerErrorException,Res,Param } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { Public } from 'src/common/public.middleware';
 import {  Response } from 'express';
+import { Types } from 'mongoose';
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
@@ -34,5 +35,14 @@ export class UsersController {
       throw new InternalServerErrorException(error);
     }
     
+  }
+  @Public()
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    try {
+      return this.usersService.findOne(new Types.ObjectId(id));
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
   }
 }

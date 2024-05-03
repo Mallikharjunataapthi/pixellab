@@ -6,6 +6,7 @@ import { UsersService } from 'src/users/users.service';
 import { Model, Types } from 'mongoose';
 import { Apps } from 'src/apps/schema/apps.schema';
 import { InjectModel } from '@nestjs/mongoose';
+import { UpdateUserDto } from 'src/users/dto/update-user.dto';
 @Injectable()
 export class AuthService {
     constructor(
@@ -18,14 +19,14 @@ export class AuthService {
         const {password, ...Userdata} = createUserDto;
         const hasedpassword = await bcrypt.hash(password,10);
         let createUser;
-        if(createUserDto.app_id != undefined && createUserDto.app_id != null){
-
-        }
-        if( createUserDto?.app_id.length == 24 ){
+        if(createUserDto.app_id != undefined && createUserDto.app_id != null && createUserDto?.app_id.length == 24 ){
             const appid = createUserDto.app_id;
             const AppName = await this.AppsModel.findById(appid);
             if (AppName != undefined && AppName != null && AppName.app_name != undefined && AppName.app_name != null) {
               createUser = { ...Userdata,password:hasedpassword,role_id:2,app_name:AppName.app_name }
+              if(createUser.profile_img == undefined || createUser.profile_img == null || createUser.profile_img == ''){
+                delete createUser.profile_img
+              }
               await this.usersService.create(createUser);
             }else{
               return {
@@ -35,7 +36,14 @@ export class AuthService {
               };
             }
           }else {
-            createUser = { ...Userdata,password:hasedpassword,role_id:0 }
+            createUser = { ...Userdata,password:hasedpassword }
+            if(createUser.profile_img == undefined || createUser.profile_img == null || createUser.profile_img == ''){
+              delete createUser.profile_img
+            }
+            if(createUser.role_id == 0){
+              delete createUser.app_id;
+              delete createUser.email;
+            }
             await this.usersService.create(createUser);
           }
 
@@ -97,6 +105,65 @@ export class AuthService {
         }
         return Userdata;
     }
-
+    async update(id: string, updateUserDto: UpdateUserDto) {
+      const {password, ...Userdata} = updateUserDto;
+      const hasedpassword = await bcrypt.hash(password,10);
+      try{
+            // this flag used to validate schema for update operations
+        let createUser;
+        const opts = { runValidators: true };
+        
+        if(updateUserDto?.app_id != undefined && updateUserDto?.app_id != null &&  updateUserDto?.app_id.length == 24 ){
+          const appid = updateUserDto.app_id;
+          const AppName = await this.AppsModel.findById(appid);
+          if (AppName != undefined && AppName != null && AppName.app_name != undefined && AppName.app_name != null) {
+            createUser = { ...Userdata,role_id:updateUserDto.role_id,app_name:AppName.app_name }
+            
+           const updateUser = await this.usersService.update(id,createUser);
+            if(updateUser == 'User Already Exists')  {
+              return {
+                success: false,
+                StatusCode:HttpStatus.BAD_REQUEST,
+                message: 'User Already Exists',
+              };
+            }
+          }else{
+            return {
+              success: false,
+              StatusCode:HttpStatus.BAD_REQUEST,
+              message: 'App not exists',
+            };
+          }
+        }else {
+          createUser = { ...Userdata,password:hasedpassword,role_id:0}
+          await this.usersService.update(id,createUser);
+        }
+      }catch(error:any){
+        if (error.code === 11000 ) {
+          return {
+            success: false,
+            StatusCode:HttpStatus.BAD_REQUEST,
+            message: 'User already exists',
+          };
+        }
+        if (error.message == "User already exists") {
+          return {
+            success: false,
+            StatusCode:HttpStatus.BAD_REQUEST,
+            message: error.message,
+          };
+        }
+        return {
+          StatusCode:HttpStatus.BAD_REQUEST,
+          success:false,
+          message:error
+        };
+      }
+      return {
+        success: true,
+        StatusCode:HttpStatus.OK,
+        message: 'User Updated',
+      };
+    }
 
 }

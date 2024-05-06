@@ -41,9 +41,8 @@ export class UsersController {
     }
     
   }
-  @Public()
   @Get(':id')
-  @ApiOperation({ summary: 'Get User Details' })
+  @ApiExcludeEndpoint()
   findOne(@Param('id') id: string) {
     try {
       return this.usersService.findOne(new Types.ObjectId(id));

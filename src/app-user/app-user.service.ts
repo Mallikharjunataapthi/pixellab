@@ -1,4 +1,4 @@
-import { HttpStatus, Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { CreateAppUserDto } from './dto/create-app-user.dto';
 import { UpdateAppUserDto } from './dto/update-app-user.dto';
 import { User } from 'src/users/Schemas/users.schema';
@@ -89,8 +89,39 @@ export class AppUserService {
     return `This action returns all appUser`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} appUser`;
+  async findOne(user_id: string,app_id:string) {
+    try{
+        if( app_id.length == 24 ){
+          const appid = app_id;
+          const AppName = await this.AppsModel.findById(appid);
+            if (AppName != undefined && AppName != null && AppName.app_name != undefined && AppName.app_name != null) {
+              try{
+                const result = await this.UserModel.findById(user_id);
+                if(result){
+                  return {
+                    success:true,
+                    StatusCode:HttpStatus.OK,
+                    data:result
+                  }
+                }else{
+                  return {
+                    success:false,
+                    StatusCode:HttpStatus.NOT_FOUND,
+                    data:result
+                  }
+                }
+              }catch(error){
+                return {
+                  success:false,
+                  message:error
+                };
+              }
+            }
+        }
+      } catch (error) {
+        throw new InternalServerErrorException(error);
+      } 
+    
   }
 
   update(id: number, updateAppUserDto: UpdateAppUserDto) {

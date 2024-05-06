@@ -3,11 +3,14 @@ import { LikesService } from './likes.service';
 import { CreateLikeDto } from './dto/create-like.dto';
 import { Response } from 'express';
 import { Public } from 'src/common/public.middleware';
+import { ApiTags, ApiOperation ,ApiExcludeEndpoint } from '@nestjs/swagger';
+@ApiTags('likes')
 @Controller('likes')
 export class LikesController {
   constructor(private readonly likesService: LikesService) {}
 @Public()
   @Post()
+  @ApiOperation({ summary: 'User likes the template' })
   async create(@Body() createLikeDto: CreateLikeDto,@Res() response: Response) {
     // check already liked
     try{

@@ -4,13 +4,17 @@ import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import {  Response } from 'express';
 import { Public } from 'src/common/public.middleware';
+import { ApiTags, ApiExcludeEndpoint, ApiOperation, ApiQuery } from '@nestjs/swagger';
 
+@ApiTags("category")
 @Controller('category')
+
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 
 
   @Post()
+  @ApiExcludeEndpoint()
   async create(@Body() createCategoryDto: CreateCategoryDto,@Res() response: Response) {
     try{
       const result = await this.categoryService.create(createCategoryDto);
@@ -51,6 +55,7 @@ export class CategoryController {
   
 
   @Get()
+  @ApiExcludeEndpoint()
   async findAll(@Query('currentPage') currentPage: number, @Query('pageSize') pageSize: number, @Res() response:Response) {
     try{
       if(isNaN(currentPage) || isNaN(pageSize)){
@@ -64,6 +69,7 @@ export class CategoryController {
     } 
   }
   @Get('/activelist')
+  @ApiExcludeEndpoint()
   async findActiveCategories(@Res() response:Response){
     try{
       const data = await this.categoryService.getActiveCategories();
@@ -73,6 +79,7 @@ export class CategoryController {
     }
   }
   @Get('/activelist/:id')
+  @ApiExcludeEndpoint()
   async findActiveappCategories(@Param('id') id: string,@Res() response:Response){
     try{
       const data = await this.categoryService.getActiveAppCategories(id);
@@ -84,6 +91,10 @@ export class CategoryController {
 
   @Public()
   @Get('/mobilecategories')
+  @ApiOperation({ summary: 'Get All Category Templates' })
+  @ApiQuery({ name: 'app_id', type: String })
+  @ApiQuery({ name: 'currentPage', type: Number })
+  @ApiQuery({ name: 'pageSize', type: Number })
   async findCategorywithImage(@Query('app_id') app_id: string,@Query('currentPage') currentPage: number, @Query('pageSize') pageSize: number, @Res() response:Response){
     try{
       if(isNaN(currentPage) || isNaN(pageSize)){
@@ -99,6 +110,7 @@ export class CategoryController {
   }
 
   @Get(':id')
+  @ApiExcludeEndpoint()
   findOne(@Param('id') id: string) {
     try{
       return this.categoryService.findOne(id);
@@ -108,6 +120,7 @@ export class CategoryController {
   }
 
   @Patch(':id')
+  @ApiExcludeEndpoint()
   async update(@Param('id') id: string, @Body() updateCategoryDto: UpdateCategoryDto, @Res() response:Response) {
     try{
      const result = await this.categoryService.update(id, updateCategoryDto);
@@ -122,6 +135,7 @@ export class CategoryController {
   }
 
   @Delete(':id')
+  @ApiExcludeEndpoint()
   async remove(@Param('id') id: string, @Res() response:Response) {
     try{
       const result = await this.categoryService.remove(id);

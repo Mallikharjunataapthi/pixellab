@@ -5,7 +5,7 @@ import { UpdateTemplateDto } from './dto/update-template.dto';
 import {  Response } from 'express';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { UpdateTagDto } from 'src/tags/dto/update-tag.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiTags, ApiOperation ,ApiExcludeEndpoint, ApiQuery } from '@nestjs/swagger';
 import { Types } from 'mongoose';
 import { Public } from 'src/common/public.middleware';
 
@@ -15,6 +15,7 @@ export class TemplatesController {
   constructor(private readonly templatesService: TemplatesService) {}
 
   @Post()
+  @ApiExcludeEndpoint()
   @UseInterceptors(FileFieldsInterceptor([
     { name: 'before_image_url', maxCount: 1 },
     { name: 'after_image_url', maxCount: 1 },
@@ -58,6 +59,12 @@ export class TemplatesController {
   
   @Public()
   @Get('/toplist')
+  @ApiOperation({ summary: 'Get All Top List Templates' })
+  @ApiQuery({ name: 'app_id', type: String })
+  @ApiQuery({ name: 'user_id', type: String, required: false,  description: 'User Liked the template (Feed) or not' })
+  @ApiQuery({ name: 'tag', type: String, required: false })
+  @ApiQuery({ name: 'currentPage', type: Number })
+  @ApiQuery({ name: 'pageSize', type: Number })
   async getTopList(@Query('app_id') app_id: string,@Query('user_id') user_id ='0',@Query('tag') tag: string='',@Query('currentPage') currentPage: number, @Query('pageSize') pageSize: number,@Res() response:Response){
     try {
       if(isNaN(currentPage) || isNaN(pageSize)){
@@ -73,6 +80,12 @@ export class TemplatesController {
 
   @Public()
   @Get('/trendinglist')
+  @ApiOperation({ summary: 'Get All Trending List Templates' })
+  @ApiQuery({ name: 'app_id', type: String })
+  @ApiQuery({ name: 'user_id', type: String, required: false, description: 'User Liked the template (Feed) or not.' })
+  @ApiQuery({ name: 'tag', type: String, required: false })
+  @ApiQuery({ name: 'currentPage', type: Number })
+  @ApiQuery({ name: 'pageSize', type: Number })
   async getTrendingList(@Query('app_id') app_id: string,@Query('user_id') user_id ='0',@Query('tag') tag: string='',@Query('currentPage') currentPage: number, @Query('pageSize') pageSize: number,@Res() response:Response){
     try {
       if(isNaN(currentPage) || isNaN(pageSize)){
@@ -88,6 +101,12 @@ export class TemplatesController {
 
   @Public()
   @Get('/recentlist')
+  @ApiOperation({ summary: 'Get All Recent List Templates' })
+  @ApiQuery({ name: 'app_id', type: String })
+  @ApiQuery({ name: 'user_id', type: String, required: false, description: 'User Liked the template (Feed) or not' })
+  @ApiQuery({ name: 'tag', type: String, required: false })
+  @ApiQuery({ name: 'currentPage', type: Number })
+  @ApiQuery({ name: 'pageSize', type: Number })
   async getRecentList(@Query('app_id') app_id: string,@Query('user_id') user_id ='0',@Query('tag') tag: string='' ,@Query('currentPage') currentPage: number, @Query('pageSize') pageSize: number,@Res() response:Response ){
     try {
       if(isNaN(currentPage) || isNaN(pageSize)){
@@ -103,6 +122,7 @@ export class TemplatesController {
 
   @Public()
   @Get('/properties/:id')
+  @ApiExcludeEndpoint()
  async getTemplateforApi(@Param('id') id:Types.ObjectId, @Res() response:Response){
     try{
       const data = await this.templatesService.findTmeplate(id);
@@ -112,6 +132,7 @@ export class TemplatesController {
     }
   }
   @Patch('/approvetemplate')
+  @ApiExcludeEndpoint()
   async approveTemplates(@Body() template:any,@Res() response:Response){
     try {
      
@@ -127,6 +148,7 @@ export class TemplatesController {
     }
   }
   @Patch('/declinetemplate')
+  @ApiExcludeEndpoint()
   async declineTemplates(@Body() template:any,@Res() response:Response){
     try { 
       const template_ids= new Types.ObjectId(template.template_id);
@@ -142,6 +164,7 @@ export class TemplatesController {
   }
 
   @Patch(':id')
+  @ApiExcludeEndpoint()
   @UseInterceptors(FileFieldsInterceptor([
     { name: 'before_image_url', maxCount: 1 },
     { name: 'after_image_url', maxCount: 1 },
@@ -183,6 +206,7 @@ export class TemplatesController {
   }
 
   @Delete(':id')
+  @ApiExcludeEndpoint()
   async remove(@Param('id') id: string, @Res() response:Response) {
     try{
       const result =  await this.templatesService.remove(id);
@@ -197,6 +221,7 @@ export class TemplatesController {
   }
   
   @Patch('update-tag/:id')
+  @ApiExcludeEndpoint()
   async updatetag(@Param('id') id: string,@Body() UpdateTagDto:UpdateTagDto, @Res() response:Response){
     try{
       const result = await this.templatesService.updatetagname(id,UpdateTagDto);
@@ -211,6 +236,7 @@ export class TemplatesController {
   }
 
   @Delete('delete-tag/:id')
+  @ApiExcludeEndpoint()
   async DeleteTag(@Param('id') id:string ,@Res() response:Response){
     try{
       const result = await this.templatesService.DeleteTagFromTemplate(id);
@@ -222,6 +248,7 @@ export class TemplatesController {
   }
 
   @Get()
+  @ApiExcludeEndpoint()
   findAll(@Query('currentPage') currentPage: number, @Query('pageSize') pageSize: number) {
     try{
       if(isNaN(currentPage) || isNaN(pageSize)){
@@ -234,6 +261,7 @@ export class TemplatesController {
     }
   } 
   @Get(':id')
+  @ApiExcludeEndpoint()
   findOne(@Param('id') id: Types.ObjectId) {
     try{
       return this.templatesService.findOne(id);

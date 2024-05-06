@@ -5,6 +5,11 @@ import { AuthService } from './auth.service';
 import { Response } from 'express';
 import { Public } from 'src/common/public.middleware';
 import { UpdateUserDto } from 'src/users/dto/update-user.dto';
+import { ApiTags, ApiExcludeController } from '@nestjs/swagger';
+
+
+@ApiTags("auth")
+@ApiExcludeController()
 @Controller('auth')
 export class AuthController { 
     constructor( private readonly AuthService:AuthService){}
@@ -34,6 +39,7 @@ export class AuthController {
         throw InternalServerErrorException;
       }
     }
+    
     @Patch(':id')
     async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto, @Res() response:Response) {
       try{

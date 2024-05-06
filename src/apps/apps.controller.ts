@@ -4,16 +4,21 @@ import { CreateAppDto } from './dto/create-app.dto';
 import { UpdateAppDto } from './dto/update-app.dto';
 import { Response } from "express"
 import mongoose, { Mongoose } from 'mongoose';
+import { ApiTags, ApiExcludeEndpoint } from '@nestjs/swagger';
+
+@ApiTags("apps")
 @Controller('apps')
 export class AppsController {
   constructor(private readonly appsService: AppsService) {}
 
   @Post()
+  @ApiExcludeEndpoint()
   create(@Body() createAppDto: CreateAppDto) {
     return this.appsService.create(createAppDto);
   }
 
   @Get()
+  @ApiExcludeEndpoint()
   async findAll(@Query('currentPage') currentPage: number, @Query('pageSize') pageSize: number,@Res() response:Response) {
     if(isNaN(currentPage) || isNaN(pageSize)){
       currentPage = 1;
@@ -24,6 +29,7 @@ export class AppsController {
   }
 
   @Get(':id')
+  @ApiExcludeEndpoint()
   findOne(@Param('id') id: mongoose.Types.ObjectId) {
     return this.appsService.findOne(id);
   }
@@ -31,13 +37,14 @@ export class AppsController {
  
 
   @Delete(':id')
+  @ApiExcludeEndpoint()
   async remove(@Param('id') id: mongoose.Types.ObjectId) {
     const isValid = await this.appsService.findOne(id);
     if(!isValid){
       return{
         success : false,
         StatusCode:HttpStatus.OK,
-        message:'Category Id invalid'
+        message:'App Id invalid'
       }
     }
     return await this.appsService.remove(id);

@@ -9,16 +9,22 @@ export class AppUser{
       type:Types.ObjectId, ref:'Apps'
     })
     app_id:Types.ObjectId;
+
     @Prop({ required: true, unique: false })
     username:String;
+
     @Prop({ required: true})
     email:String;
+
     @Prop({ required: false})
     app_name:String;
+
     @Prop({ required: true})
     profile_img:String;
+
     @Prop({ required:true, default:2})
     role_id:String;
+    
     @Prop({ required: true, enum: ['1', '0'], default: '1' })
     is_active:String;
 }

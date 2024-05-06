@@ -1,7 +1,8 @@
 import { Controller, Get, Body, Query, Res, InternalServerErrorException } from '@nestjs/common';
 import { Response } from 'express';
 import { AdminReportService } from './admin-report.service';
-
+import { ApiExcludeController } from '@nestjs/swagger';
+@ApiExcludeController()
 @Controller('admin-report')
 export class AdminReportController {
   constructor(private readonly adminReportService: AdminReportService) {}

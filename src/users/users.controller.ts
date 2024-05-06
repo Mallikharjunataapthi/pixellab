@@ -3,10 +3,14 @@ import { UsersService } from './users.service';
 import { Public } from 'src/common/public.middleware';
 import {  Response } from 'express';
 import { Types } from 'mongoose';
+import { ApiTags, ApiExcludeEndpoint, ApiOperation } from '@nestjs/swagger';
+
+@ApiTags("users")
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
   @Get()
+  @ApiExcludeEndpoint()
   async findAll(@Query('currentPage') currentPage: number, @Query('pageSize') pageSize: number) {
     try{
       if(isNaN(currentPage) || isNaN(pageSize)){
@@ -20,8 +24,9 @@ export class UsersController {
     }
     
   } 
-  @Public()
+
   @Get('/adminusers')
+  @ApiExcludeEndpoint()
   async findAllAdminUsers(@Query('currentPage') currentPage: number,@Query('app_id') app_id: string, @Query('pageSize') pageSize: number,@Res() response:Response) {
     try{
       if(isNaN(currentPage) || isNaN(pageSize)){
@@ -38,6 +43,7 @@ export class UsersController {
   }
   @Public()
   @Get(':id')
+  @ApiOperation({ summary: 'Get User Details' })
   findOne(@Param('id') id: string) {
     try {
       return this.usersService.findOne(new Types.ObjectId(id));

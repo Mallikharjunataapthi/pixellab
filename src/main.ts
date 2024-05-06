@@ -14,7 +14,7 @@ async function bootstrap() {
   .setTitle('Pixel Lab')
   .setDescription('The Pixel Lab API description')
   .setVersion('1.0')
-  .addServer('http://localhost:3000/', 'Local environment')
+  .addServer('http://localhost:3100/', 'Local environment')
   .addServer('https://pixellab.onrender.com/','Staging')
   .addServer('https://production.yourapi.com/', 'Production')
   .addTag('Pixel Lab')

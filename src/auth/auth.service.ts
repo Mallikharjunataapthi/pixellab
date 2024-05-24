@@ -65,7 +65,7 @@ export class AuthService {
       }
     }
   
-    async login(username:String, password:String){
+    async login(username:String, password:String ,expiresIn: string = '10h'){
       const user = await this.usersService.checkUser(username);
       if (!user) {
         return {
@@ -84,7 +84,7 @@ export class AuthService {
         };
       }
         const payload = { sub: user._id, username: user.username};
-        const access_token = await this.jwtService.signAsync(payload);
+        const access_token = await this.jwtService.signAsync({},{expiresIn});
       return {
         user_id:user._id.toString(),
         success:true,

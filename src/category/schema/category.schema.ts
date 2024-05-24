@@ -23,6 +23,8 @@ import { Template } from "src/templates/Schema/template.schema";
     cat_name:String;
     @Prop({ required: true, enum: ['1', '0'], default: '1' })
     is_active:String;
+    @Prop({ type:String })
+    image_url?:string;
   } 
 
   export type CategoryDocument = Category & Document;

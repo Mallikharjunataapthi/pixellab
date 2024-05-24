@@ -4,19 +4,32 @@ import { UpdateCategoryDto } from './dto/update-category.dto';
 import { Category } from './schema/category.schema';
 import { Model, Types } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
+import { FileUploadMiddleware } from 'src/common/fileupload.middleware';
 import { Template } from 'src/templates/Schema/template.schema';
 @Injectable()
 export class CategoryService { 
   constructor(
     @InjectModel(Category.name) private CategoryModel: Model<Category>,
-    @InjectModel(Template.name) private TemplateModel: Model<Template>
-
+    @InjectModel(Template.name) private TemplateModel: Model<Template>,
+    private fileuploader:FileUploadMiddleware,
   ){}
 
 
-  async create(createCategoryDto: CreateCategoryDto) {
+  async create(createCategoryDto: CreateCategoryDto, files: { image_url?: Express.Multer.File[]}) {
     try{
-      await  this.CategoryModel.create(createCategoryDto);
+
+      const ImageFile = files.image_url ? files.image_url[0] : null;
+      let ImageS3Response = null;
+      let  newTemplateDto ;
+      if(ImageFile != null) {
+        ImageS3Response = await this.fileuploader.s3_upload(ImageFile);
+        newTemplateDto = {...createCategoryDto,image_url:ImageS3Response ?ImageS3Response : null};
+      } else {
+          newTemplateDto = createCategoryDto ;
+      }
+     
+       
+      await  this.CategoryModel.create(newTemplateDto);
       return {
         success:true,
         StatusCode:HttpStatus.OK,
@@ -66,7 +79,38 @@ export class CategoryService {
       }
     }
   }
-
+  async getAllcategories(app_id:string) {
+    try{
+      const filter: {
+        app_id: any;
+        is_active: any; // Make 'user_id' property optional
+      } = {
+        app_id:app_id,
+        is_active:1
+      };
+      const result = await this.CategoryModel.find(filter).sort({ updatedAt: -1 }).populate('app_id', 'app_name');
+      //const totalCategories = await this.CategoryModel.countDocuments(filter);
+      if(result){
+        return {
+          success:true,
+          StatusCode:HttpStatus.OK,
+          data:{result}
+        }
+      }else{
+        return {
+          success:true,
+          StatusCode:HttpStatus.NOT_FOUND,
+          data:{result}
+        }
+      }
+    }catch(error){
+      return {
+        success:false,
+        StatusCode:HttpStatus.BAD_REQUEST,
+        message:'Category Fetching failed'
+      }
+    }
+  }
   async getActiveCategories(){
     try{
       const result = await this.CategoryModel.find({is_active:'1'}).sort({updatedAt:-1});
@@ -139,12 +183,21 @@ export class CategoryService {
     }
   }
 
-  async update(id: string, updateCategoryDto: UpdateCategoryDto) {
+  async update(id: string, updateCategoryDto: UpdateCategoryDto, files: { image_url?: Express.Multer.File[]}) {
     try{
           // this flag used to validate schema for update operations
       const opts = { runValidators: true };
-      
-       const result = await this.CategoryModel.findOneAndUpdate({_id:id},updateCategoryDto,opts);
+      const ImageFile = files.image_url ? files.image_url[0] : null;
+      let ImageS3Response = null;
+      let  newTemplateDto ;
+      if(ImageFile != null) {
+        ImageS3Response = await this.fileuploader.s3_upload(ImageFile);
+        newTemplateDto = {...updateCategoryDto,image_url:ImageS3Response ?ImageS3Response : null};
+      } else {
+        newTemplateDto = updateCategoryDto ;
+      }
+     
+       const result = await this.CategoryModel.findOneAndUpdate({_id:id},newTemplateDto,opts);
         if(result){
           await this.updatecategory(id, updateCategoryDto)
           return {
@@ -259,6 +312,81 @@ export class CategoryService {
           is_active: 1,
           app_id: app_id,
           latestTemplates: { $slice: ['$latestTemplates', 5] },
+        },
+      },
+    ]);
+    
+  return{
+    success:true,
+    StatusCode:HttpStatus.OK,
+    data:{
+      result,
+      currentPage: page,
+      totalPages: Math.ceil(totalCategories / pageSize),
+      pageSize
+    }
+  }    
+  }
+  async findCategory(app_id: string,cat_id: string, page: number, pageSize: number) {
+      const filters :{
+        is_active:any,
+        app_id: any,
+        _id?: any
+      }={
+        is_active:'1',
+        app_id: app_id,
+      }
+      if (cat_id != null && cat_id !='') {
+        filters._id=new Types.ObjectId(cat_id);
+      }
+    const skip = (page - 1) * pageSize;
+    const totalCategories = await this.CategoryModel.countDocuments(filters);
+    const result = await this.CategoryModel.aggregate([ 
+      {
+        $match:filters
+      },
+      {
+        $lookup: {
+          from: 'templates',
+          localField: '_id',
+          foreignField: 'cat_id',
+          as: 'templates',
+        },
+      },
+      {
+        $unwind: {
+          path: '$templates',
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $sort: { 'templates.createdAt': -1 },
+      },
+      {
+        $skip:skip,
+      },
+      {
+        $group: {
+          _id: '$_id',
+          cat_name: { $first: '$cat_name' },
+          is_active: { $first: '$is_active' },
+          latestTemplates: { $push: 
+            { 
+              id: '$templates._id', 
+              afterurl: '$templates.after_image_url',
+              beforeurl: '$templates.before_image_url'
+            }
+           },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          cat_id: '$_id',
+          cat_name: 1,
+          is_active: 1,
+          app_id: app_id,
+          latestTemplates: { $slice: ['$latestTemplates', 10] },
         },
       },
     ]);

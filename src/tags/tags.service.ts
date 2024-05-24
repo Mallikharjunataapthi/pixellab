@@ -55,7 +55,26 @@ export class TagsService {
       throw new InternalServerErrorException(error);
     }
   }
-
+  async getalltags(app_id:string) {
+    try {
+      const filter: {
+        app_id: any;
+        is_active: any; // Make 'user_id' property optional
+      } = {
+        app_id:app_id,
+        is_active:1
+      };
+      const result = await this.tagsModel.find(filter).sort({ updatedAt: -1 }).populate('app_id', 'app_name');
+      const totalTags = await this.tagsModel.countDocuments(filter);
+      return{
+        success: true,
+        StatusCode:HttpStatus.OK,
+        data:{result}
+      }
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
+  }
  async findOne(id: string) {
     try {
       const result = await this.tagsModel.findById(id);

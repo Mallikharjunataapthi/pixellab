@@ -4,7 +4,7 @@ import { CategoryController } from './category.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Category, CategorySchema } from './schema/category.schema';
 import { TemplatesModule } from 'src/templates/templates.module';
-
+import { FileUploadMiddleware } from 'src/common/fileupload.middleware';
 @Module({
     imports:[
       MongooseModule.forFeature([{
@@ -14,7 +14,7 @@ import { TemplatesModule } from 'src/templates/templates.module';
     forwardRef(() => TemplatesModule),
     ],
   controllers: [CategoryController],
-  providers: [CategoryService],
+  providers: [CategoryService,FileUploadMiddleware],
   exports: [CategoryService,MongooseModule],
 })
 export class CategoryModule {}

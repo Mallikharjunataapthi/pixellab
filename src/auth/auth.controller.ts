@@ -9,7 +9,7 @@ import { ApiTags, ApiExcludeController } from '@nestjs/swagger';
 
 
 @ApiTags("auth")
-@ApiExcludeController()
+//@ApiExcludeController()
 @Controller('auth')
 export class AuthController { 
     constructor( private readonly AuthService:AuthService){}
@@ -39,7 +39,16 @@ export class AuthController {
         throw InternalServerErrorException;
       }
     }
-    
+    @Public()
+    @Get('websignin')
+    async loginWebUser(@Query() loginUserDto: CreateUserDto, @Res() response : Response) {
+      try{
+        const data = await this.AuthService.login(loginUserDto.username,loginUserDto.password,"60s");
+        response.status(data.StatusCode).json(data);
+      }catch(err){
+        throw InternalServerErrorException;
+      }
+    }
     @Patch(':id')
     async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto, @Res() response:Response) {
       try{

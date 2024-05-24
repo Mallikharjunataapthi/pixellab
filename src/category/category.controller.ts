@@ -1,11 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus, InternalServerErrorException, HttpException, Res, Query, SetMetadata, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus, InternalServerErrorException, HttpException, Res, Query, SetMetadata, UseGuards, UseInterceptors, UploadedFiles } from '@nestjs/common';
 import { CategoryService } from './category.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import {  Response } from 'express';
 import { Public } from 'src/common/public.middleware';
 import { ApiTags, ApiExcludeEndpoint, ApiOperation, ApiQuery } from '@nestjs/swagger';
-
+import { FileFieldsInterceptor } from '@nestjs/platform-express';
 @ApiTags("category")
 @Controller('category')
 
@@ -15,9 +15,12 @@ export class CategoryController {
 
   @Post()
   @ApiExcludeEndpoint()
-  async create(@Body() createCategoryDto: CreateCategoryDto,@Res() response: Response) {
+  @UseInterceptors(FileFieldsInterceptor([
+    { name: 'image_url', maxCount: 1 },
+  ]))
+  async create(@Body() createCategoryDto: CreateCategoryDto,@Res() response: Response, @UploadedFiles() files?: { image_url?: Express.Multer.File[] }) {
     try{
-      const result = await this.categoryService.create(createCategoryDto);
+      const result = await this.categoryService.create(createCategoryDto,files);
         return response.status(result.StatusCode).json({
           success:result.success,
           StatusCode:result.StatusCode,
@@ -68,6 +71,19 @@ export class CategoryController {
       throw InternalServerErrorException;
     } 
   }
+  @Public()
+  @Get('/categories')
+  @ApiOperation({ summary: 'Get Category List' })
+  @ApiQuery({ name: 'app_id', type: String })
+  async getAllcategories(@Query('app_id') app_id: string, @Res() response:Response) {
+    try{
+   
+      const result =  await this.categoryService.getAllcategories(app_id);
+      return response.status(result.StatusCode).json({result});
+    }catch(error){
+      throw InternalServerErrorException;
+    } 
+  }
   @Get('/activelist')
   @ApiExcludeEndpoint()
   async findActiveCategories(@Res() response:Response){
@@ -108,6 +124,27 @@ export class CategoryController {
     }
     
   }
+  @Public()
+  @Get('/category')
+  @ApiOperation({ summary: 'Get Category Templates' })
+  @ApiQuery({ name: 'app_id', type: String })
+  @ApiQuery({ name: 'cat_id', type: String ,required: false})
+  @ApiQuery({ name: 'currentPage', type: Number })
+  @ApiQuery({ name: 'pageSize', type: Number })
+  async findCategory(@Query('app_id') app_id: string,@Query('cat_id') cat_id: string='',@Query('currentPage') currentPage: number, @Query('pageSize') pageSize: number, @Res() response:Response){
+   
+    try{
+      if(isNaN(currentPage) || isNaN(pageSize)){
+        currentPage = 1;
+        pageSize = 10;
+      }
+      const data = await this.categoryService.findCategory(app_id,cat_id,currentPage,pageSize);
+      response.status(data.StatusCode).json(data);
+    }catch(error){
+      throw new InternalServerErrorException(error);;
+    }
+    
+  }
 
   @Get(':id')
   @ApiExcludeEndpoint()
@@ -121,9 +158,12 @@ export class CategoryController {
 
   @Patch(':id')
   @ApiExcludeEndpoint()
-  async update(@Param('id') id: string, @Body() updateCategoryDto: UpdateCategoryDto, @Res() response:Response) {
+  @UseInterceptors(FileFieldsInterceptor([
+    { name: 'image_url', maxCount: 1 },
+  ]))
+  async update(@Param('id') id: string, @Body() updateCategoryDto: UpdateCategoryDto, @Res() response:Response, @UploadedFiles() files?: { image_url?: Express.Multer.File[] }) {
     try{
-     const result = await this.categoryService.update(id, updateCategoryDto);
+     const result = await this.categoryService.update(id, updateCategoryDto,files);
      if(result.success){
       return response.status(result.StatusCode).send(result);
      }else{

@@ -14,7 +14,7 @@ import { AppsModule } from 'src/apps/apps.module';
   JwtModule.register({
       global: true,
       secret: jwtConstants.secret,
-      signOptions: { expiresIn: '10h' },
+     // signOptions: { expiresIn: '10h' },
  
   }),
   forwardRef(() => AppsModule),

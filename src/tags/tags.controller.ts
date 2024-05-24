@@ -3,13 +3,16 @@ import { TagsService } from './tags.service';
 import { CreateTagDto } from './dto/create-tag.dto';
 import { UpdateTagDto } from './dto/update-tag.dto';
 import { Response } from 'express';
-import { ApiExcludeController } from '@nestjs/swagger';
-@ApiExcludeController()
+import { ApiExcludeController, ApiExcludeEndpoint, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { Public } from 'src/common/public.middleware';
+//@ApiExcludeController()
+@ApiTags("tags")
 @Controller('tags')
 export class TagsController {
   constructor(private readonly tagsService: TagsService) {}
 
   @Post()
+  @ApiExcludeEndpoint()
   async create(@Body() createTagDto: CreateTagDto, @Res() response:Response) {
     try {
       const result = await this.tagsService.create(createTagDto);
@@ -24,6 +27,7 @@ export class TagsController {
    
   }
   @Get('/activelist/:id')
+  @ApiExcludeEndpoint()
   async findActiveapplist(@Param('id') id: string,@Res() response:Response){
     try{
       const data = await this.tagsService.findAllActiveAppList(id);
@@ -33,6 +37,7 @@ export class TagsController {
     }
   }
   @Get('/activelist')
+  @ApiExcludeEndpoint()
   async findActivelist(@Res() response:Response){
     try{
       const data = await this.tagsService.findAllActiveList();
@@ -41,8 +46,20 @@ export class TagsController {
       throw new InternalServerErrorException(error);
     }
   }
-  
+  @Public()
+  @Get('/tags')
+  @ApiOperation({ summary: 'Get Tags List' })
+  @ApiQuery({ name: 'app_id', type: String })
+  getalltags(@Query('app_id') app_id: string) {
+    try{
+      const data = this.tagsService.getalltags(app_id);
+      return data;
+    }catch(error){
+      throw new InternalServerErrorException(error);
+    }
+  }
   @Get()
+  @ApiExcludeEndpoint()
   findAll(@Query('currentPage') currentPage: number, @Query('pageSize') pageSize: number) {
     try{
       if(isNaN(currentPage) || isNaN(pageSize)){
@@ -57,6 +74,7 @@ export class TagsController {
   }
 
   @Get(':id')
+  @ApiExcludeEndpoint()
   findOne(@Param('id') id: string) {
     try {
       return this.tagsService.findOne(id);

@@ -8,5 +8,6 @@ export class CreateCategoryDto {
     @IsString({ message: 'Category must be a string' })
     readonly cat_name:String;
     @IsNotEmpty({ message: 'Status is required' })
-    readonly is_active:String
+    readonly is_active:String;
+    image_url?:string;
 }

@@ -11,6 +11,7 @@ import { LikesModule } from './likes/likes.module';
 import { JwtModule } from '@nestjs/jwt';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './auth/auth.guard';
+import { UserIpModule } from './user-ip/user-ip.module';
 // import { PassportModule } from '@nestjs/passport';
 // import { jwtConstants } from './auth/constants';
 import { TagsModule } from './tags/tags.module';
@@ -19,12 +20,13 @@ import { ReportTemplateModule } from './report-template/report-template.module';
 import { AdminReportModule } from './admin-report/admin-report.module';
 import { AppsModule } from './apps/apps.module';
 import { AppUserModule } from './app-user/app-user.module';
+import { UserContactModule } from './user-contact/user-contact.module';
 @Module({
   imports: [ConfigModule.forRoot({
     envFilePath: '.env',
     isGlobal: true,
   }),
-  UsersModule,MongooseModule.forRoot(process.env.DB_URI), AuthModule, CategoryModule, TemplatesModule, LikesModule, TagsModule, UserTemplatesModule, ReportTemplateModule, AdminReportModule, AppsModule, AppUserModule],
+  UsersModule,MongooseModule.forRoot(process.env.DB_URI), AuthModule, CategoryModule, TemplatesModule, LikesModule, TagsModule, UserTemplatesModule, ReportTemplateModule, AdminReportModule, AppsModule, AppUserModule,UserIpModule,UserContactModule],
   controllers: [AppController],
   providers: [{
     provide: APP_GUARD,

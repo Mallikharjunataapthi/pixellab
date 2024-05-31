@@ -94,9 +94,14 @@ export class UserTemplatesService {
               is_approved: AppName.is_auto == '1' ? 'Approved': 'Pending',
             }
           }
-          
           if(createUserTemplateDto.purchase_url != undefined && createUserTemplateDto.purchase_url != null && createUserTemplateDto.base_image_path != ''){
-             UsertempalteObject = {...UsertempalteObject,purchase_url:createUserTemplateDto.purchase_url};  
+            UsertempalteObject = {...UsertempalteObject,purchase_url:createUserTemplateDto.purchase_url};  
+          }
+          if(createUserTemplateDto?.aspect_ratio_x != undefined && createUserTemplateDto?.aspect_ratio_x != null && createUserTemplateDto?.aspect_ratio_x != ''){
+            UsertempalteObject = {...UsertempalteObject,aspect_ratio_x:createUserTemplateDto.aspect_ratio_x};  
+          }
+          if(createUserTemplateDto?.aspect_ratio_y != undefined && createUserTemplateDto?.aspect_ratio_y != null && createUserTemplateDto?.aspect_ratio_y != ''){
+             UsertempalteObject = {...UsertempalteObject,aspect_ratio_y:createUserTemplateDto.aspect_ratio_y};  
           }
           if(createUserTemplateDto.base_image_path != undefined && createUserTemplateDto.base_image_path != null && createUserTemplateDto.base_image_path != ''){
             const newUsertempalteObject = {...UsertempalteObject,base_image_path:createUserTemplateDto.base_image_path};

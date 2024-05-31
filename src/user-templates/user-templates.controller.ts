@@ -27,6 +27,8 @@ export class UserTemplatesController {
         purchase_url: { type: 'string',required:['false'] },
         user_temp_before_image_url: { type: 'string', format: 'binary' },
         user_temp_after_image_url: { type: 'string', format: 'binary' },
+        aspect_ratio_x: { type: 'string', required:['false'] },
+        aspect_ratio_y: { type: 'string',required:['false'] },
       },
     },
   })

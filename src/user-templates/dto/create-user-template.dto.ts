@@ -21,5 +21,7 @@ export class CreateUserTemplateDto {
     user_temp_after_image_url:string;
     base_image_path:string;
     purchase_url:string;
+    aspect_ratio_x:string;
+    aspect_ratio_y:string;
     
 }

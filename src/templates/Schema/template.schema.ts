@@ -73,6 +73,10 @@ export class Template{
   original_template_id:Types.ObjectId
   @Prop({ type:String })
   purchase_url:string;
+  @Prop({ type:String })
+  aspect_ratio_x:string;
+  @Prop({ type:String })
+  aspect_ratio_y:string;
   
 }
 export type TemplateDocument = Template & Document;

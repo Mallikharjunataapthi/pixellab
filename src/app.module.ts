@@ -26,7 +26,9 @@ import { UserContactModule } from './user-contact/user-contact.module';
     envFilePath: '.env',
     isGlobal: true,
   }),
-  UsersModule,MongooseModule.forRoot(process.env.DB_URI), AuthModule, CategoryModule, TemplatesModule, LikesModule, TagsModule, UserTemplatesModule, ReportTemplateModule, AdminReportModule, AppsModule, AppUserModule,UserIpModule,UserContactModule],
+  UsersModule,MongooseModule.forRoot(process.env.DB_URI, {
+    dbName: process.env.DB_Name, // Specify the database name here
+  }), AuthModule, CategoryModule, TemplatesModule, LikesModule, TagsModule, UserTemplatesModule, ReportTemplateModule, AdminReportModule, AppsModule, AppUserModule,UserIpModule,UserContactModule],
   controllers: [AppController],
   providers: [{
     provide: APP_GUARD,

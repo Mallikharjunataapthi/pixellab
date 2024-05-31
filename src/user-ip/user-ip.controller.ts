@@ -10,24 +10,13 @@ import { Public } from 'src/common/public.middleware';
 @Controller('user-ip')
 export class UserIpController {
   constructor(private readonly userIpService: UserIpService) {}
-  @Public()
   @Post()
-  @ApiOperation({ summary: 'Create a new user and login' })
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        ip: { type: 'string' ,required:['true']},
-      },
-    },
-  })
+  @ApiExcludeEndpoint()
   create(@Body() createUserIpDto: CreateUserIpDto) {
     return this.userIpService.create(createUserIpDto);
   }
-  @Public()
   @Get()
-  @ApiOperation({ summary: 'Get User Deatils' })
-  @ApiQuery({ name: 'user_ip', type: String })
+  @ApiExcludeEndpoint()
   async findAll(@Query('user_ip') user_ip: string,@Res() response:Response) {
     const data = await this.userIpService.findAll(user_ip);
     response.status(data.StatusCode).json(data);

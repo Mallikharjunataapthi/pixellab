@@ -58,5 +58,7 @@ export class CreateTemplateDto {
     base_image_path:string;
 
     purchase_url:string;
+    aspect_ratio_x:string;
+    aspect_ratio_y:string;
 }
 

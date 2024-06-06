@@ -33,6 +33,6 @@ export class UpdateTemplateDto extends PartialType(CreateTemplateDto) {
       user_id:Types.ObjectId;
       base_image_path:string;
       purchase_url:string;
-      aspect_ratio_x:string;
-      aspect_ratio_y:string;
+      aspect_ratio_x:number;
+      aspect_ratio_y:number;
 }

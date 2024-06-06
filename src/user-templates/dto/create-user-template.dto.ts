@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Transform } from "class-transformer";
-import { IsArray, IsNotEmpty, IsString } from "class-validator";
+import { IsArray, IsNotEmpty, IsNumber, IsString } from "class-validator";
 import { Types } from "mongoose";
 
 export class CreateUserTemplateDto {
@@ -21,7 +21,9 @@ export class CreateUserTemplateDto {
     user_temp_after_image_url:string;
     base_image_path:string;
     purchase_url:string;
-    aspect_ratio_x:string;
-    aspect_ratio_y:string;
+    //@IsNumber({}, { message: 'Aspect ratio X must be a number' })
+    aspect_ratio_x:number;
+    //@IsNumber({}, { message: 'Aspect ratio Y must be a number' })
+    aspect_ratio_y:number;
     
 }

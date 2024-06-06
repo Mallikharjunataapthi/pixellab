@@ -97,10 +97,10 @@ export class UserTemplatesService {
           if(createUserTemplateDto.purchase_url != undefined && createUserTemplateDto.purchase_url != null && createUserTemplateDto.base_image_path != ''){
             UsertempalteObject = {...UsertempalteObject,purchase_url:createUserTemplateDto.purchase_url};  
           }
-          if(createUserTemplateDto?.aspect_ratio_x != undefined && createUserTemplateDto?.aspect_ratio_x != null && createUserTemplateDto?.aspect_ratio_x != ''){
+          if(createUserTemplateDto?.aspect_ratio_x != undefined && createUserTemplateDto?.aspect_ratio_x != null ){
             UsertempalteObject = {...UsertempalteObject,aspect_ratio_x:createUserTemplateDto.aspect_ratio_x};  
           }
-          if(createUserTemplateDto?.aspect_ratio_y != undefined && createUserTemplateDto?.aspect_ratio_y != null && createUserTemplateDto?.aspect_ratio_y != ''){
+          if(createUserTemplateDto?.aspect_ratio_y != undefined && createUserTemplateDto?.aspect_ratio_y != null){
              UsertempalteObject = {...UsertempalteObject,aspect_ratio_y:createUserTemplateDto.aspect_ratio_y};  
           }
           if(createUserTemplateDto.base_image_path != undefined && createUserTemplateDto.base_image_path != null && createUserTemplateDto.base_image_path != ''){

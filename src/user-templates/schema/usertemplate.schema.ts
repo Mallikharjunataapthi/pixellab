@@ -57,10 +57,10 @@ export class UserTemplate {
       base_image_path:string;
       @Prop({ type:String })
       purchase_url:string;
-      @Prop({ type:String })
-      aspect_ratio_x:string;
-      @Prop({ type:String })
-      aspect_ratio_y:string;
+      @Prop({ type:Number })
+      aspect_ratio_x:number;
+      @Prop({ type:Number })
+      aspect_ratio_y:number;
 }
 
 export const UserTemplateSchema = SchemaFactory.createForClass(UserTemplate);

@@ -60,13 +60,13 @@ export class TagsController {
   }
   @Get()
   @ApiExcludeEndpoint()
-  findAll(@Query('currentPage') currentPage: number, @Query('pageSize') pageSize: number) {
+  findAll(@Query('searchApp') searchApp: string, @Query('currentPage') currentPage: number, @Query('pageSize') pageSize: number) {
     try{
       if(isNaN(currentPage) || isNaN(pageSize)){
         currentPage = 1;
         pageSize = 10;
       }
-      const data = this.tagsService.findAll(currentPage,pageSize);
+      const data = this.tagsService.findAll(currentPage,pageSize,searchApp);
       return data;
     }catch(error){
       throw new InternalServerErrorException(error);

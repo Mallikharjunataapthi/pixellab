@@ -47,11 +47,19 @@ export class CategoryService {
     }
   }
 
-  async findAll(page:number=0,pageSize:number=10) {
+  async findAll(page:number=0,pageSize:number=10,searchApp:string = '') {
+    const filter: {
+      app_id?:  string;
+    } = {
+      
+    };
+    if(searchApp != ''){
+      filter.app_id = searchApp;
+    } 
     try{
       const skip = (page - 1) * pageSize;
-      const result = await this.CategoryModel.find().sort({ updatedAt: -1 }).skip(skip).limit(pageSize).populate('app_id', 'app_name');
-      const totalCategories = await this.CategoryModel.countDocuments();
+      const result = await this.CategoryModel.find(filter).sort({ updatedAt: -1 }).skip(skip).limit(pageSize).populate('app_id', 'app_name');
+      const totalCategories = await this.CategoryModel.countDocuments(filter);
       if(result){
         return {
           success:true,

@@ -59,13 +59,13 @@ export class CategoryController {
 
   @Get()
   @ApiExcludeEndpoint()
-  async findAll(@Query('currentPage') currentPage: number, @Query('pageSize') pageSize: number, @Res() response:Response) {
+  async findAll(@Query('searchApp') searchApp: string, @Query('currentPage') currentPage: number, @Query('pageSize') pageSize: number, @Res() response:Response) {
     try{
       if(isNaN(currentPage) || isNaN(pageSize)){
         currentPage = 1;
         pageSize = 10;
       }
-      const result =  await this.categoryService.findAll(currentPage,pageSize);
+      const result =  await this.categoryService.findAll(currentPage,pageSize,searchApp);
       return response.status(result.StatusCode).json({result});
     }catch(error){
       throw InternalServerErrorException;

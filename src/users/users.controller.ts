@@ -11,13 +11,13 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
   @Get()
   @ApiExcludeEndpoint()
-  async findAll(@Query('currentPage') currentPage: number, @Query('pageSize') pageSize: number) {
+  async findAll(@Query('searchApp') searchApp: string,@Query('searchName') searchName: string,@Query('currentPage') currentPage: number, @Query('pageSize') pageSize: number) {
     try{
       if(isNaN(currentPage) || isNaN(pageSize)){
         currentPage = 1;
         pageSize = 10;
       }
-      const result = await this.usersService.findAll(currentPage,pageSize);
+      const result = await this.usersService.findAll(currentPage,pageSize,searchApp,searchName);
       return result;
     }catch(error){
       throw new InternalServerErrorException(error);

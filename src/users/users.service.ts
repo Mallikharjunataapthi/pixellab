@@ -44,11 +44,25 @@ export class UsersService {
     return user;
   }
 
-  async findAll(page:number=0,pageSize:number=10) {
+  async findAll(page:number=0,pageSize:number=10,searchApp:string = '',searchName:string = '') {
     try{
       const skip = (page - 1) * pageSize;
-      const data = await this.UserModel.find().sort({updatedAt:-1}).skip(skip).limit(pageSize).populate('app_id','app_name');
-      const totalUsers = await this.UserModel.countDocuments();
+      const filter: {
+        username?: { $regex: string, $options: 'i' };
+        app_id?: string;
+        
+      } = {
+        
+      };
+
+      if(searchName != ''){
+        filter.username = { $regex: searchName, $options: 'i' };
+      }
+      if(searchApp != ''){
+        filter.app_id = searchApp;
+      }
+      const data = await this.UserModel.find(filter).sort({updatedAt:-1}).skip(skip).limit(pageSize).populate('app_id','app_name');
+      const totalUsers = await this.UserModel.countDocuments(filter);
       return{
         success: true,
         StatusCode:HttpStatus.OK,

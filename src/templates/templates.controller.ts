@@ -249,13 +249,13 @@ export class TemplatesController {
 
   @Get()
   @ApiExcludeEndpoint()
-  findAll(@Query('currentPage') currentPage: number, @Query('pageSize') pageSize: number) {
+  findAll(@Query('searchApp') searchApp: string,@Query('searchApproved') searchApproved: string,  @Query('currentPage') currentPage: number, @Query('pageSize') pageSize: number) {
     try{
       if(isNaN(currentPage) || isNaN(pageSize)){
         currentPage = 1;
         pageSize = 10;
       }
-      return this.templatesService.findAll(currentPage,pageSize);
+      return this.templatesService.findAll(currentPage,pageSize,searchApp,searchApproved);
     }catch(error){
       throw new InternalServerErrorException(error);
     }

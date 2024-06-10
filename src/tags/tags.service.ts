@@ -3,7 +3,7 @@ import { CreateTagDto } from './dto/create-tag.dto';
 import { UpdateTagDto } from './dto/update-tag.dto';
 import { tags } from './schema/tags.schema';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 
 @Injectable()
 export class TagsService {  
@@ -38,11 +38,20 @@ export class TagsService {
     }
   }
 
-  async findAll(page:number=0,pageSize:number=10) {
+  async findAll(page:number=0,pageSize:number=10,searchApp:string = '') {
+
+    const filter: {
+      app_id?: string;
+    } = {
+      
+    };
+    if(searchApp != ''){
+      filter.app_id = searchApp;
+    } 
     try {
       const skip = (page - 1) * pageSize;
-      const result = await this.tagsModel.find().sort({ updatedAt: -1 }).skip(skip).limit(pageSize).populate('app_id', 'app_name');
-      const totalTags = await this.tagsModel.countDocuments();
+      const result = await this.tagsModel.find(filter).sort({ updatedAt: -1 }).skip(skip).limit(pageSize).populate('app_id', 'app_name');
+      const totalTags = await this.tagsModel.countDocuments(filter);
       return{
         success: true,
         StatusCode:HttpStatus.OK,

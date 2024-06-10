@@ -68,11 +68,24 @@ export class TemplatesService {
       throw new InternalServerErrorException(error);
     }
   }
-  async findAll(page:number=0,pageSize:number=10) {
+  async findAll(page:number=0,pageSize:number=10,searchApp:string ='',searchApproved:string ='') {
     try{
+      const filter: {
+        is_approved?: string;
+        app_id?:  Types.ObjectId;
+        
+      } = {
+        
+      };
+      if(searchApp != ''){
+        filter.app_id = new Types.ObjectId(searchApp);
+      } 
+      if(searchApproved != ''){
+        filter.is_approved = searchApproved;
+      }
       const skip = (page - 1) * pageSize;
-      const result = await this.TemplateModel.find().sort({ updatedAt: -1 }).skip(skip).limit(pageSize).populate('app_id', 'app_name');
-      const totalTemplates = await this.TemplateModel.countDocuments();
+      const result = await this.TemplateModel.find(filter).sort({ updatedAt: -1 }).skip(skip).limit(pageSize).populate('app_id', 'app_name');
+      const totalTemplates = await this.TemplateModel.countDocuments(filter);
       if(result){
         return {
           success:true,

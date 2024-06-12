@@ -62,5 +62,7 @@ export class CreateTemplateDto {
     aspect_ratio_x:number;
    // @IsNumber({}, { message: 'Aspect ratio X must be a number' })
     aspect_ratio_y:number;
+    
+    api_to_call:string;
 }
 

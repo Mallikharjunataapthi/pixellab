@@ -77,6 +77,7 @@ export class UserTemplatesService {
               feedType:templateData.data.feedType,
               template_desc:templateData.data.template_desc,
               is_approved: AppName.is_auto == '1' ? 'Approved': 'Pending',
+              api_to_call:templateData.data.api_to_call
             }
           } else {
             const timestamp = new Date().getTime();

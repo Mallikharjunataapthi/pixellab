@@ -35,4 +35,5 @@ export class UpdateTemplateDto extends PartialType(CreateTemplateDto) {
       purchase_url:string;
       aspect_ratio_x:number;
       aspect_ratio_y:number;
+      api_to_call:string;
 }

@@ -61,6 +61,8 @@ export class UserTemplate {
       aspect_ratio_x:number;
       @Prop({ type:Number })
       aspect_ratio_y:number;
+      @Prop({ type:String })
+      api_to_call:string;
 }
 
 export const UserTemplateSchema = SchemaFactory.createForClass(UserTemplate);

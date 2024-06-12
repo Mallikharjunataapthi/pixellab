@@ -16,7 +16,7 @@ async function bootstrap() {
   .setVersion('1.0')
   .addServer('http://localhost:3100/', 'Local environment')
   .addServer('https://pixellab.onrender.com/','Staging')
-  .addServer('https://production.yourapi.com/', 'Production')
+  .addServer('http://164.52.195.167:3100/', 'Production')
   .addTag('Pixel Lab')
   .build();
   const document = SwaggerModule.createDocument(app, config);

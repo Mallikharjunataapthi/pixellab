@@ -26,8 +26,14 @@ import { UserContactModule } from './user-contact/user-contact.module';
     envFilePath: '.env',
     isGlobal: true,
   }),
-  UsersModule,MongooseModule.forRoot(process.env.DB_URI, {
-    dbName: process.env.DB_Name, // Specify the database name here
+  UsersModule,
+  MongooseModule.forRootAsync({
+  imports: [ConfigModule],
+  useFactory: async (configService: ConfigService) => ({
+  uri: configService.get<string>('DB_URI'),
+  dbName: configService.get<string>('DB_NAME'),
+  }),
+  inject: [ConfigService],
   }), AuthModule, CategoryModule, TemplatesModule, LikesModule, TagsModule, UserTemplatesModule, ReportTemplateModule, AdminReportModule, AppsModule, AppUserModule,UserIpModule,UserContactModule],
   controllers: [AppController],
   providers: [{

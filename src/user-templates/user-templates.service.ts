@@ -80,6 +80,7 @@ export class UserTemplatesService {
               api_to_call:templateData.data.api_to_call,
               aspect_ratio_x:templateData.data.aspect_ratio_x,
               aspect_ratio_y:templateData.data.aspect_ratio_y,
+              base_image_path:templateData.data.base_image_path ? templateData.data.base_image_path : '',
             }
           } else {
             const timestamp = new Date().getTime();
@@ -99,7 +100,7 @@ export class UserTemplatesService {
               is_approved: AppName.is_auto == '1' ? 'Approved': 'Pending',
             }
           }
-          if(createUserTemplateDto.purchase_url != undefined && createUserTemplateDto.purchase_url != null && createUserTemplateDto.base_image_path != ''){
+          if(createUserTemplateDto.purchase_url != undefined && createUserTemplateDto.purchase_url != null && createUserTemplateDto.purchase_url != ''){
             UsertempalteObject = {...UsertempalteObject,purchase_url:createUserTemplateDto.purchase_url};  
           }
           if(createUserTemplateDto.base_image_path != undefined && createUserTemplateDto.base_image_path != null && createUserTemplateDto.base_image_path != ''){

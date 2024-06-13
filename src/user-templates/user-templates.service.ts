@@ -77,7 +77,9 @@ export class UserTemplatesService {
               feedType:templateData.data.feedType,
               template_desc:templateData.data.template_desc,
               is_approved: AppName.is_auto == '1' ? 'Approved': 'Pending',
-              api_to_call:templateData.data.api_to_call
+              api_to_call:templateData.data.api_to_call,
+              aspect_ratio_x:templateData.data.aspect_ratio_x,
+              aspect_ratio_y:templateData.data.aspect_ratio_y,
             }
           } else {
             const timestamp = new Date().getTime();
@@ -92,17 +94,13 @@ export class UserTemplatesService {
               is_active:"1",
               used_count:0,
               wishlist_count:0,
+              aspect_ratio_x:1,
+              aspect_ratio_y:1,
               is_approved: AppName.is_auto == '1' ? 'Approved': 'Pending',
             }
           }
           if(createUserTemplateDto.purchase_url != undefined && createUserTemplateDto.purchase_url != null && createUserTemplateDto.base_image_path != ''){
             UsertempalteObject = {...UsertempalteObject,purchase_url:createUserTemplateDto.purchase_url};  
-          }
-          if(createUserTemplateDto?.aspect_ratio_x != undefined && createUserTemplateDto?.aspect_ratio_x != null ){
-            UsertempalteObject = {...UsertempalteObject,aspect_ratio_x:createUserTemplateDto.aspect_ratio_x};  
-          }
-          if(createUserTemplateDto?.aspect_ratio_y != undefined && createUserTemplateDto?.aspect_ratio_y != null){
-             UsertempalteObject = {...UsertempalteObject,aspect_ratio_y:createUserTemplateDto.aspect_ratio_y};  
           }
           if(createUserTemplateDto.base_image_path != undefined && createUserTemplateDto.base_image_path != null && createUserTemplateDto.base_image_path != ''){
             const newUsertempalteObject = {...UsertempalteObject,base_image_path:createUserTemplateDto.base_image_path};

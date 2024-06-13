@@ -73,9 +73,9 @@ export class Template{
   original_template_id:Types.ObjectId
   @Prop({ type:String })
   purchase_url:string;
-  @Prop({ type:Number })
+  @Prop({ type:Number, default: '3' })
   aspect_ratio_x:number;
-  @Prop({ type:Number })
+  @Prop({ type:Number, default: '4' })
   aspect_ratio_y:number;
   @Prop({ type:String })
   api_to_call: string;

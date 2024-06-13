@@ -30,7 +30,7 @@ export class FileUploadMiddleware {
     });
     try {
       await this.s3.send(command);
-      const url = `https://${bucket}.s3.${process.env.S3_BUCKET_REGION}.amazonaws.com/${filename}`
+      const url = `https://d2ehtq8apqlfs7.cloudfront.net/${filename}`
       return url;
     } catch (err) {
       console.error(err);

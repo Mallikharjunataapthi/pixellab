@@ -169,6 +169,7 @@ export class TemplatesService {
        const updateObject: any = {
         app_id:new Types.ObjectId(updateTemplateDto.app_id),
         cat_id: new Types.ObjectId(updateTemplateDto.cat_id),
+        user_id: new Types.ObjectId(updateTemplateDto.user_id),
         template_name: updateTemplateDto.template_name,
         is_active: updateTemplateDto.is_active,
         is_free: updateTemplateDto.is_free,

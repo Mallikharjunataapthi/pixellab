@@ -179,6 +179,7 @@ export class TemplatesService {
         template_desc:updateTemplateDto.template_desc,
         aspect_ratio_x:updateTemplateDto.aspect_ratio_x,
         aspect_ratio_y:updateTemplateDto.aspect_ratio_y,
+        api_to_call:updateTemplateDto.api_to_call
       }; 
       if(updateTemplateDto.purchase_url !=undefined && updateTemplateDto.purchase_url != null){
         updateObject.purchase_url = updateTemplateDto.purchase_url;

@@ -1,4 +1,11 @@
-import { Controller, Get, Body, Query, Res, InternalServerErrorException } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Body,
+  Query,
+  Res,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { Response } from 'express';
 import { AdminReportService } from './admin-report.service';
 import { ApiExcludeController } from '@nestjs/swagger';
@@ -7,34 +14,50 @@ import { ApiExcludeController } from '@nestjs/swagger';
 export class AdminReportController {
   constructor(private readonly adminReportService: AdminReportService) {}
 
-
-
   @Get('/mostusedtemplates')
-  async findAll(@Query('currentPage') currentPage: number, @Query('pageSize') pageSize: number, @Res() response:Response) {
-    try{
-      if(isNaN(currentPage) || isNaN(pageSize)){
+  async findAll(
+    @Query('currentPage') currentPage: number,
+    @Query('pageSize') pageSize: number,
+    @Res() response: Response,
+  ) {
+    try {
+      if (isNaN(currentPage) || isNaN(pageSize)) {
         currentPage = 1;
         pageSize = 10;
       }
-      const result =  await this.adminReportService.MostUsedTemplates(currentPage,pageSize);
-      return response.status(result.StatusCode).json({result});
-    }catch(error){
-      throw new InternalServerErrorException();;
-    } 
+      const result = await this.adminReportService.MostUsedTemplates(
+        currentPage,
+        pageSize,
+      );
+      return response.status(result.StatusCode).json({ result });
+    } catch (error) {
+      throw new InternalServerErrorException();
+    }
   }
 
   @Get('/mostactiveusers')
-  async findactiveUsers(@Query('fromDatestring') fromDatestring : string,@Query('toDateString') toDateString:string,@Query('currentPage') currentPage: number, @Query('pageSize') pageSize: number, @Res() response:Response){
-    try{
-      if(isNaN(currentPage) || isNaN(pageSize)){
+  async findactiveUsers(
+    @Query('fromDatestring') fromDatestring: string,
+    @Query('toDateString') toDateString: string,
+    @Query('currentPage') currentPage: number,
+    @Query('pageSize') pageSize: number,
+    @Res() response: Response,
+  ) {
+    try {
+      if (isNaN(currentPage) || isNaN(pageSize)) {
         currentPage = 1;
         pageSize = 10;
       }
-      const result =  await this.adminReportService.MostActiveUsers(currentPage,pageSize,fromDatestring,toDateString);
-      return response.status(result.StatusCode).json({result});
-    }catch(error){
+      const result = await this.adminReportService.MostActiveUsers(
+        currentPage,
+        pageSize,
+        fromDatestring,
+        toDateString,
+      );
+      return response.status(result.StatusCode).json({ result });
+    } catch (error) {
       throw new InternalServerErrorException(error);
-    } 
+    }
   }
 
   // @Get(':id')

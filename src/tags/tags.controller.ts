@@ -1,48 +1,64 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Res, Query, InternalServerErrorException } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Res,
+  Query,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { TagsService } from './tags.service';
 import { CreateTagDto } from './dto/create-tag.dto';
 import { UpdateTagDto } from './dto/update-tag.dto';
 import { Response } from 'express';
-import { ApiExcludeController, ApiExcludeEndpoint, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
+import {
+  ApiExcludeController,
+  ApiExcludeEndpoint,
+  ApiOperation,
+  ApiQuery,
+  ApiTags,
+} from '@nestjs/swagger';
 import { Public } from 'src/common/public.middleware';
 //@ApiExcludeController()
-@ApiTags("tags")
+@ApiTags('tags')
 @Controller('tags')
 export class TagsController {
   constructor(private readonly tagsService: TagsService) {}
 
   @Post()
   @ApiExcludeEndpoint()
-  async create(@Body() createTagDto: CreateTagDto, @Res() response:Response) {
+  async create(@Body() createTagDto: CreateTagDto, @Res() response: Response) {
     try {
       const result = await this.tagsService.create(createTagDto);
       return response.status(result.StatusCode).json({
-        success:result.success,
-        StatusCode:result.StatusCode,
-        message:result.message,
-      })
+        success: result.success,
+        StatusCode: result.StatusCode,
+        message: result.message,
+      });
     } catch (error) {
       throw new InternalServerErrorException(error);
     }
-   
   }
   @Get('/activelist/:id')
   @ApiExcludeEndpoint()
-  async findActiveapplist(@Param('id') id: string,@Res() response:Response){
-    try{
+  async findActiveapplist(@Param('id') id: string, @Res() response: Response) {
+    try {
       const data = await this.tagsService.findAllActiveAppList(id);
       response.status(data.StatusCode).json(data);
-    }catch(error){
+    } catch (error) {
       throw new InternalServerErrorException(error);
     }
   }
   @Get('/activelist')
   @ApiExcludeEndpoint()
-  async findActivelist(@Res() response:Response){
-    try{
+  async findActivelist(@Res() response: Response) {
+    try {
       const data = await this.tagsService.findAllActiveList();
       response.status(data.StatusCode).json(data);
-    }catch(error){
+    } catch (error) {
       throw new InternalServerErrorException(error);
     }
   }
@@ -51,24 +67,28 @@ export class TagsController {
   @ApiOperation({ summary: 'Get Tags List' })
   @ApiQuery({ name: 'app_id', type: String })
   getalltags(@Query('app_id') app_id: string) {
-    try{
+    try {
       const data = this.tagsService.getalltags(app_id);
       return data;
-    }catch(error){
+    } catch (error) {
       throw new InternalServerErrorException(error);
     }
   }
   @Get()
   @ApiExcludeEndpoint()
-  findAll(@Query('searchApp') searchApp: string, @Query('currentPage') currentPage: number, @Query('pageSize') pageSize: number) {
-    try{
-      if(isNaN(currentPage) || isNaN(pageSize)){
+  findAll(
+    @Query('searchApp') searchApp: string,
+    @Query('currentPage') currentPage: number,
+    @Query('pageSize') pageSize: number,
+  ) {
+    try {
+      if (isNaN(currentPage) || isNaN(pageSize)) {
         currentPage = 1;
         pageSize = 10;
       }
-      const data = this.tagsService.findAll(currentPage,pageSize,searchApp);
+      const data = this.tagsService.findAll(currentPage, pageSize, searchApp);
       return data;
-    }catch(error){
+    } catch (error) {
       throw new InternalServerErrorException(error);
     }
   }
@@ -83,8 +103,6 @@ export class TagsController {
     }
   }
 
-
-
   // @Patch(':id')
   // async update(@Param('id') id: string, @Body() updateTagDto: UpdateTagDto, @Res() response:Response) {
   //   try{
@@ -97,6 +115,6 @@ export class TagsController {
   //   }catch(error){
   //    throw new InternalServerErrorException(error);
   //   }
-    
+
   // }
 }

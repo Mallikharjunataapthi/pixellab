@@ -8,17 +8,18 @@ import { CategoryModule } from 'src/category/category.module';
 import { TagsModule } from 'src/tags/tags.module';
 
 @Module({
-  imports:[
+  imports: [
     TagsModule,
-    MongooseModule.forFeature([{
-      name:Template.name,
-      schema:TemplateSchema
-    }]),
+    MongooseModule.forFeature([
+      {
+        name: Template.name,
+        schema: TemplateSchema,
+      },
+    ]),
     forwardRef(() => CategoryModule),
   ],
-  controllers: [
-    TemplatesController],
-  providers: [TemplatesService,FileUploadMiddleware],
-  exports: [TemplatesService,MongooseModule],
+  controllers: [TemplatesController],
+  providers: [TemplatesService, FileUploadMiddleware],
+  exports: [TemplatesService, MongooseModule],
 })
 export class TemplatesModule {}

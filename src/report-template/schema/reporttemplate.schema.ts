@@ -2,23 +2,25 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Types } from 'mongoose';
 
 @Schema({
-    timestamps:true,
+  timestamps: true,
 })
 export class ReportTemplate {
-    @Prop({
-        type:Types.ObjectId, ref:'Apps'
-      })
-      app_id:Types.ObjectId;
-    @Prop({ type:Types.ObjectId, required:true, ref:"User"})
-    user_id:Types.ObjectId;
-    @Prop({ type:Types.ObjectId, required:true, ref:"Template"})
-    template_id:Types.ObjectId
-    @Prop({ type:String, required:true})
-    feedback:string
-    @Prop({ type:String, default:1})
-    is_active:string
-    @Prop({ type:String })
-    app_name:string
+  @Prop({
+    type: Types.ObjectId,
+    ref: 'Apps',
+  })
+  app_id: Types.ObjectId;
+  @Prop({ type: Types.ObjectId, required: true, ref: 'User' })
+  user_id: Types.ObjectId;
+  @Prop({ type: Types.ObjectId, required: true, ref: 'Template' })
+  template_id: Types.ObjectId;
+  @Prop({ type: String, required: true })
+  feedback: string;
+  @Prop({ type: String, default: 1 })
+  is_active: string;
+  @Prop({ type: String })
+  app_name: string;
 }
 
-export const ReportTemplateSchemaSchema = SchemaFactory.createForClass(ReportTemplate);
+export const ReportTemplateSchemaSchema =
+  SchemaFactory.createForClass(ReportTemplate);

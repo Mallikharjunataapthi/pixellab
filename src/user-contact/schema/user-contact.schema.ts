@@ -1,25 +1,24 @@
-
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 @Schema({
   timestamps: true,
 })
 export class UserContact {
   @Prop({
-    required:[true, 'Name required']
+    required: [true, 'Name required'],
   })
-  username:String
+  username: string;
   @Prop({
-    required:[true, 'Email required']
+    required: [true, 'Email required'],
   })
-  email:String;
+  email: string;
   @Prop({
-    required:[true, 'Message required']
+    required: [true, 'Message required'],
   })
-  message:String;
+  message: string;
   @Prop({
-    required:[true, 'Message required']
+    required: [true, 'Message required'],
   })
-  webname:String;
+  webname: string;
 }
 export type UserContactDocument = UserContact & Document;
 export const UserContactSchema = SchemaFactory.createForClass(UserContact);

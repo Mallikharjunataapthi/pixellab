@@ -22,23 +22,40 @@ import { AppsModule } from './apps/apps.module';
 import { AppUserModule } from './app-user/app-user.module';
 import { UserContactModule } from './user-contact/user-contact.module';
 @Module({
-  imports: [ConfigModule.forRoot({
-    envFilePath: '.env',
-    isGlobal: true,
-  }),
-  UsersModule,
-  MongooseModule.forRootAsync({
-  imports: [ConfigModule],
-  useFactory: async (configService: ConfigService) => ({
-  uri: configService.get<string>('DB_URI'),
-  dbName: configService.get<string>('DB_NAME'),
-  }),
-  inject: [ConfigService],
-  }), AuthModule, CategoryModule, TemplatesModule, LikesModule, TagsModule, UserTemplatesModule, ReportTemplateModule, AdminReportModule, AppsModule, AppUserModule,UserIpModule,UserContactModule],
+  imports: [
+    ConfigModule.forRoot({
+      envFilePath: '.env',
+      isGlobal: true,
+    }),
+    UsersModule,
+    MongooseModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        uri: configService.get<string>('DB_URI'),
+        dbName: configService.get<string>('DB_NAME'),
+      }),
+      inject: [ConfigService],
+    }),
+    AuthModule,
+    CategoryModule,
+    TemplatesModule,
+    LikesModule,
+    TagsModule,
+    UserTemplatesModule,
+    ReportTemplateModule,
+    AdminReportModule,
+    AppsModule,
+    AppUserModule,
+    UserIpModule,
+    UserContactModule,
+  ],
   controllers: [AppController],
-  providers: [{
-    provide: APP_GUARD,
-    useClass: AuthGuard,
-  },AppService],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
+    },
+    AppService,
+  ],
 })
 export class AppModule {}

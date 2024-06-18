@@ -5,9 +5,7 @@ import { TemplatesModule } from 'src/templates/templates.module';
 import { UsersModule } from 'src/users/users.module';
 import { UserTemplatesModule } from 'src/user-templates/user-templates.module';
 @Module({
-  imports:[
-    TemplatesModule, UsersModule,UserTemplatesModule
-  ],
+  imports: [TemplatesModule, UsersModule, UserTemplatesModule],
   controllers: [AdminReportController],
   providers: [AdminReportService],
 })

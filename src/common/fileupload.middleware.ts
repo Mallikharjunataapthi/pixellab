@@ -1,4 +1,8 @@
-import { DeleteObjectCommand, PutObjectCommand,S3Client } from '@aws-sdk/client-s3';
+import {
+  DeleteObjectCommand,
+  PutObjectCommand,
+  S3Client,
+} from '@aws-sdk/client-s3';
 const { v4: uuidv4 } = require('uuid');
 export class FileUploadMiddleware {
   private s3: S3Client;
@@ -8,12 +12,11 @@ export class FileUploadMiddleware {
         accessKeyId: process.env.S3_BUCKET_ACCESSKEY,
         secretAccessKey: process.env.S3_BUCKET_SECRETE_ACCESSKEY,
       },
-      region:process.env.S3_BUCKET_REGION,
+      region: process.env.S3_BUCKET_REGION,
     });
   }
 
-  async s3_upload(ImageFile:any) {
-
+  async s3_upload(ImageFile: any) {
     // return 'https://pixellabs3.s3.us-west-2.amazonaws.com/1704194791289_dummy.jpeg';
     const file = ImageFile.buffer;
     const bucket = process.env.AWS_S3_BUCKET;
@@ -30,7 +33,7 @@ export class FileUploadMiddleware {
     });
     try {
       await this.s3.send(command);
-      const url = `https://d2ehtq8apqlfs7.cloudfront.net/${filename}`
+      const url = `https://d2ehtq8apqlfs7.cloudfront.net/${filename}`;
       return url;
     } catch (err) {
       console.error(err);
@@ -43,10 +46,12 @@ export class FileUploadMiddleware {
         Bucket: process.env.AWS_S3_BUCKET,
         Key: filePath,
       };
-  
-      const deletedObject = await this.s3.send(new DeleteObjectCommand(deleteParams));
+
+      const deletedObject = await this.s3.send(
+        new DeleteObjectCommand(deleteParams),
+      );
       console.log('Deleted object:', deletedObject);
-  
+
       // Check if the deletion was successful
       if (deletedObject.$metadata.httpStatusCode !== 204) {
         console.error('Object not deleted');
@@ -54,17 +59,15 @@ export class FileUploadMiddleware {
       }
     } catch (error) {
       console.error('Error deleting file from S3:', error);
-       throw error;
+      throw error;
     }
   }
-  
 
-
-   RenameFile(filename:string) {
+  RenameFile(filename: string) {
     const timestamp = new Date().getTime();
     const randomString = uuidv4(); // Generate a random string using UUID
     const extension = filename.split('.').pop(); // Get the file extension
     const fileName = `${timestamp}_${randomString}.${extension}`;
     return fileName;
-}
+  }
 }

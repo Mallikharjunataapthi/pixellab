@@ -1,10 +1,29 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Res, Query, InternalServerErrorException } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Res,
+  Query,
+  InternalServerErrorException,
+  UseInterceptors,
+  UploadedFiles,
+} from '@nestjs/common';
 import { AppUserService } from './app-user.service';
 import { CreateAppUserDto } from './dto/create-app-user.dto';
 import { UpdateAppUserDto } from './dto/update-app-user.dto';
 import { Public } from 'src/common/public.middleware';
-import { ApiTags, ApiOperation ,ApiExcludeEndpoint, ApiQuery } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiExcludeEndpoint,
+  ApiQuery,
+} from '@nestjs/swagger';
 import { Response } from 'express';
+import { FileFieldsInterceptor } from '@nestjs/platform-express';
 @ApiTags('app-user')
 @Controller('app-user')
 export class AppUserController {
@@ -12,17 +31,33 @@ export class AppUserController {
   @Public()
   @Post('/signup')
   @ApiOperation({ summary: 'Create a new user and login' })
-  create(@Body() createAppUserDto: CreateAppUserDto) {
-    return this.appUserService.create(createAppUserDto);
+  @UseInterceptors(
+    FileFieldsInterceptor([{ name: 'profile_img', maxCount: 1 }]),
+  )
+  async create(
+    @Body() createAppUserDto: CreateAppUserDto,
+    @Res() response: Response,
+    @UploadedFiles() files?: { profile_img?: Express.Multer.File[] },
+  ) {
+    const result = await this.appUserService.create(createAppUserDto, files);
+    return response.status(result.StatusCode).json({
+      success: result.success,
+      StatusCode: result.StatusCode,
+      message: result.message,
+    });
   }
   @Public()
   @Get('/userdetails')
   @ApiOperation({ summary: 'Get User Deatils' })
   @ApiQuery({ name: 'app_id', type: String })
   @ApiQuery({ name: 'user_id', type: String, description: 'User Id' })
-   async findOne(@Query('user_id') user_id: string,@Query('app_id') app_id: string, @Res() response:Response) {
-     try {
-      const data = await this.appUserService.findOne(user_id,app_id);
+  async findOne(
+    @Query('user_id') user_id: string,
+    @Query('app_id') app_id: string,
+    @Res() response: Response,
+  ) {
+    try {
+      const data = await this.appUserService.findOne(user_id, app_id);
       response.status(data.StatusCode).json(data);
     } catch (error) {
       throw new InternalServerErrorException(error);
@@ -43,7 +78,16 @@ export class AppUserController {
 
   @Delete(':id')
   @ApiExcludeEndpoint()
-  remove(@Param('id') id: string) {
-    return this.appUserService.remove(+id);
+  async remove(@Param('id') id: string, @Res() response: Response) {
+    try {
+      const result = await this.appUserService.remove(id);
+      return response.status(result.StatusCode).json({
+        success: result.success,
+        StatusCode: result.StatusCode,
+        message: result.message,
+      });
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
   }
 }

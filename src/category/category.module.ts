@@ -6,15 +6,17 @@ import { Category, CategorySchema } from './schema/category.schema';
 import { TemplatesModule } from 'src/templates/templates.module';
 import { FileUploadMiddleware } from 'src/common/fileupload.middleware';
 @Module({
-    imports:[
-      MongooseModule.forFeature([{
-      name: Category.name,
-      schema:CategorySchema
-    }]),
+  imports: [
+    MongooseModule.forFeature([
+      {
+        name: Category.name,
+        schema: CategorySchema,
+      },
+    ]),
     forwardRef(() => TemplatesModule),
-    ],
+  ],
   controllers: [CategoryController],
-  providers: [CategoryService,FileUploadMiddleware],
-  exports: [CategoryService,MongooseModule],
+  providers: [CategoryService, FileUploadMiddleware],
+  exports: [CategoryService, MongooseModule],
 })
 export class CategoryModule {}

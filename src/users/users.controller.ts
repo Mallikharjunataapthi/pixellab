@@ -1,45 +1,68 @@
-import { Controller, Get, Query, InternalServerErrorException,Res,Param } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Query,
+  InternalServerErrorException,
+  Res,
+  Param,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { Public } from 'src/common/public.middleware';
-import {  Response } from 'express';
+import { Response } from 'express';
 import { Types } from 'mongoose';
 import { ApiTags, ApiExcludeEndpoint, ApiOperation } from '@nestjs/swagger';
 
-@ApiTags("users")
+@ApiTags('users')
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
   @Get()
   @ApiExcludeEndpoint()
-  async findAll(@Query('searchApp') searchApp: string,@Query('searchName') searchName: string,@Query('currentPage') currentPage: number, @Query('pageSize') pageSize: number) {
-    try{
-      if(isNaN(currentPage) || isNaN(pageSize)){
+  async findAll(
+    @Query('searchApp') searchApp: string,
+    @Query('searchName') searchName: string,
+    @Query('currentPage') currentPage: number,
+    @Query('pageSize') pageSize: number,
+  ) {
+    try {
+      if (isNaN(currentPage) || isNaN(pageSize)) {
         currentPage = 1;
         pageSize = 10;
       }
-      const result = await this.usersService.findAll(currentPage,pageSize,searchApp,searchName);
+      const result = await this.usersService.findAll(
+        currentPage,
+        pageSize,
+        searchApp,
+        searchName,
+      );
       return result;
-    }catch(error){
+    } catch (error) {
       throw new InternalServerErrorException(error);
     }
-    
-  } 
+  }
 
   @Get('/adminusers')
   @ApiExcludeEndpoint()
-  async findAllAdminUsers(@Query('currentPage') currentPage: number,@Query('app_id') app_id: string, @Query('pageSize') pageSize: number,@Res() response:Response) {
-    try{
-      if(isNaN(currentPage) || isNaN(pageSize)){
+  async findAllAdminUsers(
+    @Query('currentPage') currentPage: number,
+    @Query('app_id') app_id: string,
+    @Query('pageSize') pageSize: number,
+    @Res() response: Response,
+  ) {
+    try {
+      if (isNaN(currentPage) || isNaN(pageSize)) {
         currentPage = 1;
         pageSize = 10;
       }
-      const data = await this.usersService.getAllAdminUsers(app_id,currentPage,pageSize);
+      const data = await this.usersService.getAllAdminUsers(
+        app_id,
+        currentPage,
+        pageSize,
+      );
       response.status(data.StatusCode).json(data);
-      
-    }catch(error){
+    } catch (error) {
       throw new InternalServerErrorException(error);
     }
-    
   }
   @Get(':id')
   @ApiExcludeEndpoint()

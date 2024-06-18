@@ -4,9 +4,9 @@ import { IsNotEmpty } from 'class-validator';
 
 export class UpdateTagDto extends PartialType(CreateTagDto) {
   @IsNotEmpty({ message: 'App is required' })
-  app_id:String;
+  app_id: string;
   @IsNotEmpty()
   tag_name: string;
   @IsNotEmpty()
-  oldTagName:string;
+  oldTagName: string;
 }

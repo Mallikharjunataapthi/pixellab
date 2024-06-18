@@ -22,7 +22,7 @@ export class AppUserService {
     files: { profile_img?: Express.Multer.File[] },
   ) {
     try {
-      const ImageFile = files.profile_img ? files.profile_img[0] : null;
+      const ImageFile = files?.profile_img ? files?.profile_img[0] : null;
       let ImageS3Response = null;
       if (ImageFile != null) {
         ImageS3Response = await this.fileuploader.s3_upload(ImageFile);

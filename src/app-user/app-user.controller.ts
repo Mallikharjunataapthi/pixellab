@@ -40,11 +40,7 @@ export class AppUserController {
     @UploadedFiles() files?: { profile_img?: Express.Multer.File[] },
   ) {
     const result = await this.appUserService.create(createAppUserDto, files);
-    return response.status(result.StatusCode).json({
-      success: result.success,
-      StatusCode: result.StatusCode,
-      message: result.message,
-    });
+    return response.status(result.StatusCode).json(result);
   }
   @Public()
   @Get('/userdetails')

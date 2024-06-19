@@ -71,4 +71,27 @@ export class UserContactController {
       throw InternalServerErrorException;
     }
   }
+  @Get()
+  @ApiExcludeEndpoint()
+  async findAll(
+    @Query('searchName') searchName: string,
+    @Query('currentPage') currentPage: number,
+    @Query('pageSize') pageSize: number,
+    @Res() response: Response,
+  ) {
+    try {
+      if (isNaN(currentPage) || isNaN(pageSize)) {
+        currentPage = 1;
+        pageSize = 10;
+      }
+      const result = await this.userContactService.findAll(
+        currentPage,
+        pageSize,
+        searchName,
+      );
+      return response.status(result.StatusCode).json({ result });
+    } catch (error) {
+      throw InternalServerErrorException;
+    }
+  }
 }

@@ -30,24 +30,61 @@ export class UserContactService {
       };
     }
   }
-  async findAll(user_ip: string = '') {
-    try {
-      const userIpCnt = await this.UserContactSchemaModel.findOne({
-        ip: user_ip,
-      });
+  async findAll(
+    page: number = 0,
+    pageSize: number = 10,
+    searchName: string = '',
+  ) {
+    const filter: {
+      $or?: { username?: { $regex: string; $options: 'i' };
+              webname?: { $regex: string; $options: 'i' };
+              email?: { $regex: string; $options: 'i' } 
+            }[];
+    } = {};
 
-      return {
-        success: true,
-        StatusCode: HttpStatus.OK,
-        message: `fetched`,
-        result: 0,
-      };
+    if (searchName !== '') {
+      filter.$or = [
+        { username: { $regex: searchName, $options: 'i' } },
+        { email: { $regex: searchName, $options: 'i' } },
+        { webname: { $regex: searchName, $options: 'i' } },
+      ];
+    }
+    try {
+      const skip = (page - 1) * pageSize;
+      const result = await this.UserContactSchemaModel.find(filter)
+        .sort({ updatedAt: -1 })
+        .skip(skip)
+        .limit(pageSize)
+       // .populate('app_id', 'app_name');
+      const totalCategories = await this.UserContactSchemaModel.countDocuments(filter);
+      if (result) {
+        return {
+          success: true,
+          StatusCode: HttpStatus.OK,
+          data: {
+            result,
+            currentPage: page,
+            totalPages: Math.ceil(totalCategories / pageSize),
+            pageSize,
+          },
+        };
+      } else {
+        return {
+          success: true,
+          StatusCode: HttpStatus.NOT_FOUND,
+          data: {
+            result,
+            currentPage: page,
+            totalPages: Math.ceil(totalCategories / pageSize),
+            pageSize,
+          },
+        };
+      }
     } catch (error) {
       return {
-        success: true,
-        StatusCode: HttpStatus.OK,
-        message: `fetched`,
-        result: 0,
+        success: false,
+        StatusCode: HttpStatus.BAD_REQUEST,
+        message: 'User Contact Details Fetching failed',
       };
     }
   }

@@ -57,12 +57,17 @@ export class UsersService {
     try {
       const skip = (page - 1) * pageSize;
       const filter: {
-        username?: { $regex: string; $options: 'i' };
+        $or?: { username?: { $regex: string; $options: 'i' };
+                email?: { $regex: string; $options: 'i' } 
+              }[];
         app_id?: string;
       } = {};
 
-      if (searchName != '') {
-        filter.username = { $regex: searchName, $options: 'i' };
+      if (searchName !== '') {
+        filter.$or = [
+          { username: { $regex: searchName, $options: 'i' } },
+          { email: { $regex: searchName, $options: 'i' } },
+        ];
       }
       if (searchApp != '') {
         filter.app_id = searchApp;

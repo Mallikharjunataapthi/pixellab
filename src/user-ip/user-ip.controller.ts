@@ -32,7 +32,6 @@ export class UserIpController {
   create(@Body() createUserIpDto: CreateUserIpDto) {
     return this.userIpService.create(createUserIpDto);
   }
-  @Public()
   @Get()
   @ApiExcludeEndpoint()
   async findAll(@Query('user_ip') user_ip: string, @Res() response: Response) {

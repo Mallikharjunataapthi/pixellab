@@ -4,6 +4,7 @@ import { Types, Model } from 'mongoose';
 enum CategoryType {
   Pro = 'Pro',
   Free = 'Free',
+  Reward = 'Reward',
 }
 enum FeedType {
   Top = 'Top',

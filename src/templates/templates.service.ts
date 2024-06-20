@@ -147,7 +147,7 @@ export class TemplatesService {
 
   async findOne(id: Types.ObjectId) {
     try {
-      const result = await this.TemplateModel.findById(id);
+      const result = await this.TemplateModel.findById(id).populate('user_id', 'username');
       if (result) {
         return {
           success: true,
@@ -413,7 +413,7 @@ export class TemplatesService {
         .sort({ updatedAt: -1 })
         .skip(skip)
         .limit(pageSize)
-        .populate('user_id', 'username')
+        .populate('user_id', 'username profile_img')
         .populate({
           path: 'likedBy',
           match: { user_id: new Types.ObjectId(users_id) },
@@ -476,7 +476,7 @@ export class TemplatesService {
         .sort({ updatedAt: -1 })
         .skip(skip)
         .limit(pageSize)
-        .populate('user_id', 'username');
+        .populate('user_id', 'username profile_img');
       const totalTemplates = await this.TemplateModel.countDocuments(filter);
       if (result) {
         return {
@@ -547,7 +547,7 @@ export class TemplatesService {
         .sort({ used_count: -1 })
         .skip(skip)
         .limit(pageSize)
-        .populate('user_id', 'username')
+        .populate('user_id', 'username profile_img')
         .select('-template_desc')
         .populate({
           path: 'likedBy',
@@ -599,7 +599,7 @@ export class TemplatesService {
       const result = await this.TemplateModel.find(filter)
         .sort({ used_count: -1 })
         .skip(skip)
-        .populate('user_id', 'username')
+        .populate('user_id', 'username profile_img')
         .limit(pageSize)
         .select({ template_desc: 0 })
         .populate({
@@ -652,7 +652,7 @@ export class TemplatesService {
         .sort({ createdAt: -1 })
         .limit(pageSize)
         .skip(skip)
-        .populate('user_id', 'username')
+        .populate('user_id', 'username profile_img')
         .select({ template_desc: 0 })
         .populate({
           path: 'likedBy',

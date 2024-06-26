@@ -25,4 +25,15 @@ export class CreateUserTemplateDto {
   //@IsNumber({}, { message: 'Aspect ratio Y must be a number' })
   aspect_ratio_y: number;
   api_to_call: string;
+  prompt: string;
+
+  style_name: string;
+
+  identitynet_strength_ratio: number;
+
+  adapter_strength_ratio: number;
+
+  num_steps: number;
+  
+  seed: number;
 }

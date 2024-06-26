@@ -136,9 +136,13 @@ export class UserTemplatesService {
               api_to_call: templateData.data.api_to_call,
               aspect_ratio_x: templateData.data.aspect_ratio_x,
               aspect_ratio_y: templateData.data.aspect_ratio_y,
-              base_image_path: templateData.data.base_image_path
-                ? templateData.data.base_image_path
-                : '',
+              base_image_path: templateData.data?.base_image_path,
+              prompt: templateData.data.prompt,
+              style_name: templateData.data.style_name,
+              identitynet_strength_ratio: templateData.data.identitynet_strength_ratio,
+              adapter_strength_ratio: templateData.data.adapter_strength_ratio,
+              num_steps: templateData.data.num_steps,
+              seed: templateData.data.seed,
             };
           } else {
             const timestamp = new Date().getTime();
@@ -177,9 +181,9 @@ export class UserTemplatesService {
             };
           }
           if (
-            createUserTemplateDto.base_image_path != undefined &&
-            createUserTemplateDto.base_image_path != null &&
-            createUserTemplateDto.base_image_path != ''
+            createUserTemplateDto?.base_image_path != undefined &&
+            createUserTemplateDto?.base_image_path != null &&
+            createUserTemplateDto?.base_image_path != ''
           ) {
             const newUsertempalteObject = {
               ...UsertempalteObject,

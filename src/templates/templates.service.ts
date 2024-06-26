@@ -231,6 +231,12 @@ export class TemplatesService {
         aspect_ratio_x: updateTemplateDto.aspect_ratio_x,
         aspect_ratio_y: updateTemplateDto.aspect_ratio_y,
         api_to_call: updateTemplateDto.api_to_call,
+        prompt: updateTemplateDto.prompt,
+        style_name: updateTemplateDto.style_name,
+        identitynet_strength_ratio: updateTemplateDto.identitynet_strength_ratio,
+        adapter_strength_ratio: updateTemplateDto.adapter_strength_ratio,
+        num_steps: updateTemplateDto.num_steps,
+        seed: updateTemplateDto.seed,
       };
       if (
         updateTemplateDto.purchase_url != undefined &&

@@ -65,6 +65,23 @@ export class UserTemplate {
   aspect_ratio_y: number;
   @Prop({ type: String })
   api_to_call: string;
+  @Prop({ type: String, default: 'none'  })
+  style_name: string;
+
+  @Prop({ type: Number, default: '0.7'  })
+  identitynet_strength_ratio: number;
+
+  @Prop({ type: Number, default: '0.8'  })
+  adapter_strength_ratio: number;
+
+  @Prop({ type: Number })
+  num_steps: number;
+
+  @Prop({ type: Number })
+  seed: number;
+
+  @Prop({ type: String })
+  prompt: string;
 }
 
 export const UserTemplateSchema = SchemaFactory.createForClass(UserTemplate);

@@ -739,17 +739,4 @@ export class TemplatesService {
       },
     };
   }
-  async testtag(id: string) {
-    const data = await this.TemplateModel.findOne({ _id: id }).select({
-      template_desc: 1,
-      template_name: 1,
-    });
-    return {
-      success: true,
-      StatusCode: HttpStatus.OK,
-      list: {
-        data,
-      },
-    };
-  }
 }

@@ -374,16 +374,7 @@ export class TemplatesController {
       throw new InternalServerErrorException(error);
     }
   }
-  @Delete('test/:id')
-  @ApiExcludeEndpoint()
-  async testTag(@Param('id') id: string, @Res() response: Response) {
-    try {
-      const result = await this.templatesService.testtag(id);
-      return response.status(result.StatusCode).json(result);
-    } catch (error) {
-      throw new InternalServerErrorException(error);
-    }
-  }
+
   @Get()
   @ApiExcludeEndpoint()
   findAll(

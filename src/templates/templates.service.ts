@@ -712,7 +712,20 @@ export class TemplatesService {
       throw new InternalServerErrorException(error);
     }
   }
-
+  async testTemplate(template_id: Types.ObjectId) {
+    try {
+      await this.TemplateModel.findByIdAndUpdate(template_id, {
+        is_approved: 'Declined',
+      });
+      return {
+        success: true,
+        StatusCode: HttpStatus.OK,
+        message: 'Template Declined Succesfully',
+      };
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
+  }
   async findTmeplate(id: Types.ObjectId) {
     const data = await this.TemplateModel.findOne({ _id: id }).select({
       template_desc: 1,

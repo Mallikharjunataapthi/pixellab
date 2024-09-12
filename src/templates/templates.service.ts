@@ -739,4 +739,17 @@ export class TemplatesService {
       },
     };
   }
+  async changestest(){
+    const data = await this.TemplateModel.findOne().select({
+      template_desc: 1,
+      template_name: 1,
+    });
+    return {
+      success: true,
+      StatusCode: HttpStatus.OK,
+      list: {
+        data,
+      },
+    };
+  }
 }
